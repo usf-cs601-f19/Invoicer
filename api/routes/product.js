@@ -1,9 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const product = require('./../models/product')
+const Product = new product();
 
 /* GET products listing. */
-router.get('/products', function(req, res, next) {
-    res.send('respond with a resource');
+router.get('/all', function(req, res, next) {
+    Product.getProducts(req,res);
+});
+
+router.post('/new', function(req, res, next) {
+    Product.addProduct(req,res);
 });
 
 module.exports = router;

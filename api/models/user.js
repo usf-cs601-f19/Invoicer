@@ -13,7 +13,11 @@ const connectionPool = mysql.createPool({
 });
 
 class User{
-
+    /**
+     * It stores a new user data in the DB
+     * @param req request
+     * @param res response
+     */
     addUser(req, res){
 
         try {
@@ -79,6 +83,12 @@ class User{
         }
     }
 
+    /**
+     * This function gives user data for authentic users
+     * @param req request
+     * @param res response
+     * @return Returns the user data if authentic else, returns error type & message in case of error
+     */
     loginUser(req, res){
         try {
             assert(req.body.mobile, 'Username is required');
@@ -87,7 +97,7 @@ class User{
             let mobile = req.body.mobile;
             let password = req.body.password;
 
-            connectionPool.query(`SELECT * FROM invoicing.user where mobile = ?`, [mobile],
+            connectionPool.query(`SELECT * FROM invoicing.user where mobile = ?`, mobile,
                 function(error, result, fields) {
                     if (error) {
                         res.status(500).send({
@@ -100,9 +110,13 @@ class User{
                             if(bcrypt.compareSync(password, result[0].password)) {
                                 // Passwords match
                                 result = result[0];
+
                                 delete result['password'];
                                 delete result['created_on'];
                                 delete result['updated_on'];
+
+                                req.session.user = result;
+                                console.log("Session created successfully");
 
                                 res.status(200).send({
                                     status: "success",
@@ -120,7 +134,7 @@ class User{
                         else{
                             res.status(500).send({
                                 status: "error",
-                                message: "No account found"
+                                message: "User not found"
                             });
                         }
                     }
