@@ -113,12 +113,9 @@ class User{
 
                                 delete result['created_on'];
                                 delete result['updated_on'];
+                                delete result['password'];
 
                                 req.session.user = result;
-                                console.log("Session created successfully");
-
-                                delete result['id'];
-                                delete result['password'];
 
                                 res.status(200).send({
                                     status: "success",
