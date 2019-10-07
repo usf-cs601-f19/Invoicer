@@ -2,7 +2,6 @@ const config = require('config');
 const mysql = require("mysql");
 const assert = require('assert')
 const AssertionError = assert.AssertionError;
-const UserUtils = require("../utilities/user");
 
 const connectionPool = mysql.createPool({
     host: config.get('database.host'),
@@ -22,15 +21,12 @@ class Product{
      */
     addProduct(req, res){
         try {
-            // Check whether user logged in
-            let user_id = UserUtils.checkLogInStatus(req,res);
-
             assert(req.body.name,"Name is required");
             assert(req.body.label ,"Label` is required");
             assert(req.body.description,"Description is required");
             assert(req.body.rate,"Rate  is required");
             assert(req.body.unique_code,"SKU/Unique Code is required");
-            assert(req.body.user_id,"User not provided");
+            assert(req.session.user.id, 'User not logged in');
 
             let name = req.body.name;
             let label = req.body.label;
@@ -39,7 +35,7 @@ class Product{
             let unique_code = req.body.unique_code;
 
             connectionPool.query(`INSERT IGNORE into invoicing.product(name,label,description,rate ,unique_code,user_id) 
-            VALUES(?,?,?,?,?,?)`, [name,label,description,rate ,unique_code,user_id], function(error, result, fields) {
+            VALUES(?,?,?,?,?,?)`, [name,label,description,rate ,unique_code,req.session.user.id], function(error, result, fields) {
                 if (error) {
                     res.status(500).send({
                         status: "error",
@@ -88,11 +84,9 @@ class Product{
      */
     getProducts(req, res){
         try {
+            assert(req.session.user.id, 'User not logged in');
 
-            let user_id = UserUtils.checkLogInStatus(req,res);
-            assert(user_id, 'User not logged in');
-
-            connectionPool.query(`SELECT * FROM invoicing.product where user_id = ?`, user_id,
+            connectionPool.query(`SELECT * FROM invoicing.product where user_id = ?`, req.session.user.id,
                 function(error, result, fields) {
                     if (error) {
                         res.status(500).send({

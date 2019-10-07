@@ -157,6 +157,20 @@ class User{
             }
         }
     }
+
+    /**
+     * This function logs the user out of the application. It deletes the session and other data of user if stored
+     * @param req request
+     * @param res response
+     * @return Returns logout message
+     */
+    logoutUser(req, res) {
+        delete req.session['user'];
+        res.status(200).send({
+            status: "success",
+            message: "Logged out successfully"
+        });
+    }
 }
 
 module.exports = User;
