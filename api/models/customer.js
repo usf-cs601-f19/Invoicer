@@ -1,6 +1,6 @@
 const config = require('config');
 const mysql = require("mysql");
-const assert = require('assert')
+const assert = require('assert');
 const AssertionError = assert.AssertionError;
 
 const connectionPool = mysql.createPool({
@@ -11,32 +11,32 @@ const connectionPool = mysql.createPool({
     connectionLimit: 2
 });
 
-class Product{
+class Customer{
 
     /**
-     * This methods inserts a product data to the DB
+     * This methods inserts a customer data to the DB
      * @param req request
      * @param res response
-     * @return Returns error if error inserting product data, else return success message
+     * @return Returns error if error inserting customer data, else return success message
      */
-    addProduct(req, res){
+    addCustomer(req, res){
         try {
-            assert(req.body.name,"Name is required");
-            assert(req.body.label ,"Label is required");
-            assert(req.body.description,"Description is required");
-            assert(req.body.rate,"Rate  is required");
-            assert(req.body.unique_code,"SKU/Unique Code is required");
-            assert(req.session.user.id, 'User not logged in');
+            assert(req.body.name, 'Name is required');
+            assert(req.body.mobile, 'Mobile is required');
+            assert(req.body.email, 'Email is required');
+            assert(req.body.company_name, 'Company Name is required');
+            assert(req.body.type_id, 'User Type is required');
 
             let name = req.body.name;
-            let label = req.body.label;
-            let description = req.body.description;
-            let rate  = req.body.rate ;
-            let unique_code = req.body.unique_code;
-            
-            connectionPool.query(`INSERT into invoicing.product(name,label,description,rate ,sku,user_id) 
-            VALUES(?,?,?,?,?,?)`, [name,label,description,rate,unique_code,req.session.user.id], function(error, result, fields) {
-                console.log("error, result, fields",error, result, fields);
+            let mobile = req.body.mobile;
+            let email = req.body.email;
+            let company_name = req.body.company_name;
+            let company_website = req.body.company_website;
+            let type_id = req.body.type_id;
+
+            connectionPool.query(`INSERT IGNORE into invoicing.customer(name, mobile, company_name, 
+       company_website, email,type_id,user_id) VALUES(?,?,?,?,?,?,?)`, [
+                name, mobile, company_name, company_website, email,type_id, req.session.user.id ], function(error, result, fields) {
                 if (error) {
                     res.status(500).send({
                         status: "error",
@@ -47,13 +47,13 @@ class Product{
                     res.status(200).send({
                         status: "success",
                         data: "",
-                        message: "Product added successfully"
+                        message: "Customer added successfully"
                     });
                 }
                 else{
                     res.status(422).send({
                         status: "error",
-                        message: "Product with this SKU already exist"
+                        message: "Customer already exists"
                     });
                 }
             });
@@ -77,17 +77,16 @@ class Product{
     }
 
     /**
-     * This function returns all the products of a user
+     * This function returns all the customers added by a user
      * @param req request
      * @param res response
-     * @return Returns the list of products if they exist else returns blank result with 204 statuscode.
+     * @return Returns the list of customers if they exist else returns blank result with 204 statuscode.
      *         Returns error type & message in case of error
      */
-    getProducts(req, res){
+    getCustomers(req, res){
         try {
-            assert(req.session.user.id, 'User not logged in');
 
-            connectionPool.query(`SELECT * FROM invoicing.product where user_id = ?`, req.session.user.id,
+            connectionPool.query(`SELECT id customer_id,name, mobile, company_name, company_website, email,type_id FROM invoicing.customer where user_id = ?`, req.session.user.id,
                 function(error, result, fields) {
                     if (error) {
                         res.status(500).send({
@@ -97,6 +96,7 @@ class Product{
                         });
                     } else{
                         if(result.length>0){
+
                             res.status(200).send({
                                 status: "success",
                                 data: result,
@@ -128,17 +128,17 @@ class Product{
     }
 
     /**
-     * This function returns a single product as per the product id
+     * This function returns a single customer data as per the customer id
      * @param req request
      * @param res response
-     * @return Returns a product if it exist. Returns error in case of error
+     * @return Returns a customer data if it exist. Returns error in case of error
      */
-    getProduct(req, res){
+    getCustomer(req, res){
         try {
-            assert(req.params.id, 'Product Id not provided');
+            assert(req.params.id, 'Customer Id not provided');
             assert(req.session.user.id, 'User not logged in');
 
-            connectionPool.query(`SELECT * FROM invoicing.product where id = ? and user_id = ?`,
+            connectionPool.query(`SELECT * FROM invoicing.customer where id = ? and user_id = ?`,
                 [req.params.id, req.session.user.id], function(error, result, fields) {
                     if (error) {
                         res.status(500).send({
@@ -179,4 +179,4 @@ class Product{
     }
 }
 
-module.exports = Product;
+module.exports = Customer;

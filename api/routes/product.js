@@ -8,6 +8,11 @@ router.get('/all', function(req, res, next) {
     Product.getProducts(req,res);
 });
 
+/* GET specific product. */
+router.get('/:id', function(req, res, next) {
+    Product.getProduct(req,res);
+});
+
 router.post('/new', function(req, res, next) {
     Product.addProduct(req,res);
 });

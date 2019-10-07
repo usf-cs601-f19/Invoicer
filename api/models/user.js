@@ -1,8 +1,8 @@
 const config = require('config');
 const mysql = require("mysql");
-const bcrypt = require('bcrypt');
 const assert = require('assert')
 const AssertionError = assert.AssertionError;
+const {compareSync, hashSync} = require('bcrypt');
 
 const connectionPool = mysql.createPool({
     host: config.get('database.host'),
@@ -39,11 +39,11 @@ class User{
             let company_website = req.body.company_website;
             let type_id = req.body.type_id;
 
-            let hashPassword = bcrypt.hashSync(password, 10);
+            let hashedPassword = hashSync(password, 10);
 
             connectionPool.query(`INSERT IGNORE into invoicing.user(name, mobile, password, company_name, 
        company_website, email,type_id) VALUES(?,?,?,?,?,?,?)`, [
-           name, mobile, hashPassword, company_name, company_website, email,type_id], function(error, result, fields) {
+           name, mobile, hashedPassword, company_name, company_website, email,type_id], function(error, result, fields) {
                 if (error) {
                     res.status(500).send({
                         status: "error",
@@ -107,16 +107,18 @@ class User{
                         });
                     } else{
                         if(result.length>0){
-                            if(bcrypt.compareSync(password, result[0].password)) {
+                            if(compareSync(password, result[0].password)) {
                                 // Passwords match
                                 result = result[0];
 
-                                delete result['password'];
                                 delete result['created_on'];
                                 delete result['updated_on'];
 
                                 req.session.user = result;
                                 console.log("Session created successfully");
+
+                                delete result['id'];
+                                delete result['password'];
 
                                 res.status(200).send({
                                     status: "success",
