@@ -55,3 +55,7 @@ Endpoint Testing – Postman
 - PDF invoice generation against a client/ View existing invoices
 
 - Optional Features if time remaining
+
+
+> Running the API
+To run the API, Goto api folder, open terminal and type `npm start`
