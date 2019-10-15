@@ -40,7 +40,7 @@ Database - MySQL 8
 
 Endpoint Testing – Postman
 
-Libraries Used-
+> Libraries Used-
 
 **Font Awesome (icon)** - `https://fontawesome.com/v4.7.0/`
 

@@ -21,26 +21,25 @@ class Product{
      */
     addProduct(req, res){
         try {
+            
             assert(req.body.name,"Name is required");
-            assert(req.body.label ,"Label is required");
             assert(req.body.description,"Description is required");
             assert(req.body.rate,"Rate  is required");
             assert(req.body.unique_code,"SKU/Unique Code is required");
             assert(req.session.user.id, 'User not logged in');
 
             let name = req.body.name;
-            let label = req.body.label;
             let description = req.body.description;
             let rate  = req.body.rate ;
             let unique_code = req.body.unique_code;
-            
+            let label = req.body.hasOwnProperty('label') ? req.body.label : "";
+
             connectionPool.query(`INSERT into invoicing.product(name,label,description,rate ,sku,user_id) 
             VALUES(?,?,?,?,?,?)`, [name,label,description,rate,unique_code,req.session.user.id], function(error, result, fields) {
-                console.log("error, result, fields",error, result, fields);
                 if (error) {
                     res.status(500).send({
                         status: "error",
-                        code: [error.errno],
+                        code: error.code,
                         message: error.sqlMessage
                     });
                 } else if(result.insertId > 0){
@@ -92,7 +91,7 @@ class Product{
                     if (error) {
                         res.status(500).send({
                             status: "error",
-                            code: [error.errno],
+                            code: error.code,
                             message: error.sqlMessage
                         });
                     } else{
@@ -143,7 +142,7 @@ class Product{
                     if (error) {
                         res.status(500).send({
                             status: "error",
-                            code: [error.errno],
+                            code: error.code,
                             message: error.sqlMessage
                         });
                     } else{

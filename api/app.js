@@ -5,6 +5,8 @@ const session = require('express-session');
 // For the middleware to pass urls other than /register, /login
 const cookieSession = require('cookie-session')
 
+const cors = require('cors');
+
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -25,7 +27,7 @@ app.use(cookieSession({
 app.use(function (req, res, next) {
 
     // if in any of the following urls, session status will not be checked
-    if(['/user/login','/user/register'].includes(req.url)){
+    if(['/','/user/login','/user/register'].includes(req.url)){
         next();
     }
     else if(req.session.hasOwnProperty('user') )
@@ -56,6 +58,7 @@ app.use(session({
 
 app.use(bodyParser.json({type: '*/*'}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
 // All the routers defined above
 app.use('/', indexRouter);

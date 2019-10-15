@@ -40,7 +40,7 @@ class Customer{
                 if (error) {
                     res.status(500).send({
                         status: "error",
-                        code: [error.errno],
+                        code: error.code,
                         message: error.sqlMessage
                     });
                 } else if(result.insertId > 0){
@@ -91,7 +91,7 @@ class Customer{
                     if (error) {
                         res.status(500).send({
                             status: "error",
-                            code: [error.errno],
+                            code: error.code,
                             message: error.sqlMessage
                         });
                     } else{
@@ -143,7 +143,7 @@ class Customer{
                     if (error) {
                         res.status(500).send({
                             status: "error",
-                            code: [error.errno],
+                            code: error.code,
                             message: error.sqlMessage
                         });
                     } else{

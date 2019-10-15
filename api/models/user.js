@@ -25,8 +25,7 @@ class User{
             assert(req.body.mobile, 'Mobile is required');
             assert(req.body.password, 'Password is required');
             assert(req.body.confirmPassword, 'Confirm Password is required');
-            assert(req.body.email, 'Email is required');
-            assert(req.body.company_name, 'Company Name is required');
+            assert(req.body.companyName, 'Company Name is required');
             assert(req.body.type_id, 'User Type is required');
 
             assert.strictEqual(req.body.password, req.body.confirmPassword,"Password and Confirm Password don't match");
@@ -34,20 +33,20 @@ class User{
             let name = req.body.name;
             let mobile = req.body.mobile;
             let password = req.body.password;
-            let email = req.body.email;
-            let company_name = req.body.company_name;
+            let companyName = req.body.companyName;
             let company_website = req.body.company_website;
             let type_id = req.body.type_id;
+            let email = req.body.hasOwnProperty('email') ? req.body.email : "";
 
             let hashedPassword = hashSync(password, 10);
 
             connectionPool.query(`INSERT IGNORE into invoicing.user(name, mobile, password, company_name, 
        company_website, email,type_id) VALUES(?,?,?,?,?,?,?)`, [
-           name, mobile, hashedPassword, company_name, company_website, email,type_id], function(error, result, fields) {
+           name, mobile, hashedPassword, companyName, company_website, email,type_id], function(error, result, fields) {
                 if (error) {
                     res.status(500).send({
                         status: "error",
-                        code: [error.errno],
+                        code: error.code,
                         message: error.sqlMessage
                     });
                 } else if(result.insertId > 0){
@@ -60,7 +59,7 @@ class User{
                 else{
                     res.status(422).send({
                         status: "error",
-                        message: "User already exists"
+                        message: "A user with same mobile number already exists"
                     });
                 }
             });
@@ -91,18 +90,18 @@ class User{
      */
     loginUser(req, res){
         try {
-            assert(req.body.mobile, 'Username is required');
+            assert(req.body.username, 'Username is required');
             assert(req.body.password, 'Password is required');
 
-            let mobile = req.body.mobile;
+            let username = req.body.username;
             let password = req.body.password;
 
-            connectionPool.query(`SELECT * FROM invoicing.user where mobile = ?`, mobile,
+            connectionPool.query(`SELECT * FROM invoicing.user where mobile = ?`, username,
                 function(error, result, fields) {
                     if (error) {
                         res.status(500).send({
                             status: "error",
-                            code: [error.errno],
+                            code: error.code,
                             message: error.sqlMessage
                         });
                     } else{
