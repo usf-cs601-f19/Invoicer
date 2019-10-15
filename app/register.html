@@ -95,10 +95,6 @@
     const api_url = "http://127.0.0.1:3000";
     if (typeof(Storage) !== "undefined") {
         // Code for localStorage/sessionStorage.
-        if (sessionStorage.getItem('status') != null){
-            //redirect to page
-            window.location = "customer.html";
-        }
     }
     else {
         $('#register-form').html('<h1 style="margin: 55px;text-align: center">Browser not supported</h1>')

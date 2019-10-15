@@ -28,60 +28,72 @@
     </div>
 </nav>
 <div class="container">
-    <h2>Customers</h2>
-    <form class="add-customer">
-        <div class="row m-t-15">
-            <div class="col-md-6 ">
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" class="form-control" placeholder="Enter Name" name="name" required>
+    <div class="col-md-6 ">
+        <h2>Customers</h2>
+    </div>
+    <div class="col-md-6 ">
+        <div class="add_more_button add_new_customer" style="width: 124px"><i class="fa fa-plus" aria-hidden="true"></i> Add new Customer</div>
+        <div class="remove_more_button remove_new_customer" style="width: 124px; display: none"><i class="fa fa-times" aria-hidden="true"></i> Cancel</div>
+    </div>
+</div>
+<div class="container">
+    <form class="add-customer-form" style="display: none">
+        <hr>
+        <h4 class="color-green">NEW CUSTOMER</h4>
+            <div class="row m-t-15">
+                <div class="col-md-6 ">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" placeholder="Enter Name" name="name" required>
+                    </div>
+                </div>
+                <div class="col-md-6 ">
+                    <div class="form-group">
+                        <label>Mobile</label>
+                        <input type="number" step="1" minlength="10" min="1000000000" name="mobile" id="mobile" tabindex="1" class="form-control" placeholder="Enter Mobile Number" required title="10 digit Numbers">
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 ">
-                <div class="form-group">
-                    <label>Mobile</label>
-                    <input type="number" step="1" minlength="10" min="1000000000" name="mobile" id="mobile" tabindex="1" class="form-control" placeholder="Enter Mobile Number" required title="10 digit Numbers">
+            <div class="row m-t-15">
+                <div class="col-md-6 ">
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text" name="company_name" id="company_name" tabindex="1" class="form-control"
+                               placeholder="Company Name" required>
+                    </div>
+                </div>
+                <div class="col-md-6 ">
+                    <div class="form-group">
+                        <label>Company Website (Optional)</label>
+                        <input type="text" name="company_website" id="company_website" tabindex="1" class="form-control"
+                               placeholder="Company website(optional)" value="http://">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row m-t-15">
-            <div class="col-md-6 ">
-                <div class="form-group">
-                    <label>Company Name</label>
-                    <input type="text" name="company_name" id="company_name" tabindex="1" class="form-control"
-                           placeholder="Company Name" required>
+            <div class="row m-t-15">
+                <div class="col-md-6 ">
+                    <div class="form-group">
+                        <label>Company Type</label>
+                        <select required name="company_type" id="company_type" tabindex="1">
+                            <option title='Select'>Select</option>
+                            <option title='freelancer' value='1'>Freelancer</option>
+                            <option title='small_business' value='2'>Small Business</option>
+                            <option title='limited_liability_company' value='3'>Limited Liability Company</option>
+                            <option title='multinational_corporation' value='4'>Multinational Corporation</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 ">
+                    <div class="form-group">
+                        <label>TIN No</label>
+                        <input type="number" class="form-control" placeholder="Enter TIN No" name="tin_number" required>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 ">
-                <div class="form-group">
-                    <label>Company Website (Optional)</label>
-                    <input type="text" name="company_website" id="company_website" tabindex="1" class="form-control"
-                           placeholder="Company website(optional)" value="http://">
-                </div>
-            </div>
-        </div>
-        <div class="row m-t-15">
-            <div class="col-md-6 ">
-                <div class="form-group">
-                    <label>Company Type</label>
-                    <select required name="company_type" id="company_type" tabindex="1">
-                        <option title='Select'>Select</option>
-                        <option title='freelancer' value='1'>Freelancer</option>
-                        <option title='small_business' value='2'>Small Business</option>
-                        <option title='limited_liability_company' value='3'>Limited Liability Company</option>
-                        <option title='multinational_corporation' value='4'>Multinational Corporation</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6 ">
-                <div class="form-group">
-                    <label>TIN No</label>
-                    <input type="number" class="form-control" placeholder="Enter TIN No" name="tin_number" required>
-                </div>
-            </div>
-        </div>
-        <button type="submit" class="btn submit-btn">Submit</button>
-    </form>
+            <div class="customer_alert_div alert" style="display: none"></div>
+            <button type="submit" class="btn submit-btn">Submit</button>
+        </form>
+    <hr>
     <table id="customers-table" class="display" cellspacing="0" width="100%">
         <thead>
         <tr>
@@ -94,14 +106,57 @@
         </tr>
         </thead>
     </table>
+    <div class="no_data_found" style="display: none"></div>
 </div>
 
 
 <script type="text/javascript">
     const api_url = "http://127.0.0.1:3000";
 
+    function getCustomers() {
+        $.ajax({
+            url: `${api_url}/customer/all`,
+            type: 'get',
+            contentType: 'application/json',
+            success: function(data, textStatus, jqXHR){
+                if(data.status === "success"){
+                    if(jqXHR.status === 200){
+                        console.log("data.data",data.data);
+                        $('#customers-table').dataTable({
+                            data: data.data,
+                            destroy: true,
+                            columns: [
+                                {data: 'name'},
+                                {data: 'mobile'},
+                                {data: 'company_name'},
+                                {data: 'company_website'},
+                                {data: 'company_type'},
+                                {data: 'tin_number'}
+                            ],
+                            responsive: true
+                        });
+                        $('.no_data_found').hide();
+                        $('#customers-table').show();
+                    }
+                    else if(jqXHR.status === 204){
+                        $('#customers-table').hide();
+                        $('.no_data_found').html('<h3 class="m-t-15">No Customer Found</h3>');
+                    }
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                $('#customers-table').hide();
+                $('.no_data_found').html('<h3 class="m-t-15">No Customers Found</h3>').show();
+                // console.log(jqXHR.responseJSON.message);
+                // $(".login_alert_div").empty().hide().addClass('alert-danger').removeClass('alert-success');
+                // $(".login_alert_div").text(jqXHR.responseJSON.message).show().fadeTo(5000, 500).slideUp(500);
+            }
+        });
+        return false;
+    }
+    getCustomers();
+
     $(document).ready(function () {
-        getCustomer();
         $(document).on('click', '.logout-root', function () {
             let cookieName = "inv_cookie";
             // function getCookie(name) {
@@ -117,11 +172,25 @@
             // function eraseCookie(cookieName) {
             //     document.cookie = name+'=; Max-Age=-99999999;';
             // }
-            document.cookie = name+'=; Max-Age=-99999999;';
-            window.location = "login.html";
+            document.cookie = cookieName+'=; Max-Age=-99999999;';
+
+            $.ajax({
+                url: `${api_url}/user/logout`,
+                type: 'GET',
+                success: function(data, textStatus, jqXHR){
+                    if(jqXHR.status == 200){
+                        window.location = "login.html";
+                    }
+                },
+                error: function(data,bb,cc){
+                    console.log("Error logging out")
+                }
+            });
+
+            return false;
         });
 
-        $(document).on('submit', '.add-customer', function () {
+        $(document).on('submit', '.add-customer-form', function () {
             const name = $('input[name="name"]').val();
             const mobile = $('input[name="mobile"]').val();
             const company_name = $('input[name="company_name"]').val();
@@ -146,48 +215,36 @@
                 data: form_data,
                 success: function(data, textStatus, jqXHR){
                     if(jqXHR.status == 200){
-                        $('.product_alert_div').removeClass('alert-danger').addClass('alert-success');
-                        $(".product_alert_div").html("Inserted successfully").show().fadeTo(2000, 500).slideUp(500).hide(0,function () {
-                            getProducts();
+                        $('.customer_alert_div').removeClass('alert-danger').addClass('alert-success');
+                        $(".customer_alert_div").html("Inserted successfully").show().fadeTo(2000, 500).slideUp(500).hide(0,function () {
+                            getCustomers();
                         });
                     }
                     else{
-                        $(".product_alert_div").empty().hide().removeClass('alert-success').addClass('alert-danger');
-                        $(".product_alert_div").text("Something didn't work").show().fadeTo(2000, 500).slideUp(500);
+                        $(".customer_alert_div").empty().hide().removeClass('alert-success').addClass('alert-danger');
+                        $(".customer_alert_div").text("Something didn't work").show().fadeTo(2000, 500).slideUp(500);
                     }
                 },
                 error: function(data,bb,cc){
-                    $(".settings-form-alert").text("Something didn't work").show(0).delay(3000).hide(0);
+                    $(".customer_alert_div").removeClass('alert-success').addClass('alert-danger')
+                    $(".customer_alert_div").text("Something didn't work").show(0).delay(3000).hide(0);
                 }
             });
             return false;
         });
 
-        function getCustomer() {
-            let clientArr = [];
-            // if (localStorage.getItem('customers') != null) {
-            //     customers.forEach(function (client) {
-            //         let tempObj = {
-            //             name: client.name,
-            //             mobile: client.mobile,
-            //             address: client.address,
-            //             tin_number: client.tin_number,
-            //         };
-            //         clientArr.push(tempObj);
-            //     });
-            // }
-            // $('#customers').dataTable({
-            //     data: clientArr,
-            //     destroy: true,
-            //     columns: [
-            //         {data: 'name'},
-            //         {data: 'mobile'},
-            //         {data: 'address'},
-            //         {data: 'tin_number'}
-            //     ],
-            //     responsive: true
-            // });
-        }
+        $(document).on('click', ".add_new_customer", function () {
+            $('.add-customer-form').show();
+            $('.remove_new_customer').show();
+            $('.add_new_customer').hide();
+        })
+
+        $(document).on('click', ".remove_new_customer", function () {
+            $('.add-customer-form').hide();
+            $('.add-customer-form').trigger("reset");
+            $('.remove_new_customer').hide();
+            $('.add_new_customer').show();
+        })
     });
 </script>
 
