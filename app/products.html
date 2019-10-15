@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Products</title>
+
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/jquery.dataTables.min.css">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="assets/js/vendor/jquery.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.min.js"></script>
+    <script src="assets/js/vendor/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav nav-tabs navbar-nav navbar-right">
+            <li class="active"><a href="#"><i class="fa fa-th-list" aria-hidden="true"></i> Products</a></li>
+<!--            <li class=""><a href="invoices.html"><i class="fa fa-file-text-o" aria-hidden="true"></i> Invoices</a></li>-->
+            <li class=""><a href="customers.html"><i class="fa fa-users" aria-hidden="true"></i> Customers</a></li>
+            <li class="logout-root"><a href="#logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Log Out</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <h2>Products</h2>
+    <form class="add-product">
+        <div class="row m-t-15">
+            <div class="col-md-6 ">
+                <label>Name</label>
+                <input type="text" class="form-control" placeholder="Name of the Product" name="name" maxlength="45" required>
+            </div>
+            <div class="col-md-6 ">
+                <label>Label</label>
+                <input type="text" class="form-control" placeholder="Label of the product (if any)" maxlength="145" name="label">
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <label>Description</label>
+                <input type="text" class="form-control" placeholder="Enter Description" name="description" required maxlength="255">
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-6 ">
+                <label>Rate</label>
+                <input type="number" step="0.01" min="0.01" max="9999" class="form-control" placeholder="Enter Price" name="rate" required>
+            </div>
+            <div class="col-md-6 ">
+                <label>Unique Code/SKU</label>
+                <input type="text" class="form-control" placeholder="Enter Unique Code/SKU"  maxlength="99" name="sku" required>
+            </div>
+        </div>
+        <div class="product_alert_div alert" style="display: none"></div>
+        <button type="submit" class="btn submit-btn m-t-15">Submit</button>
+    </form>
+    <table id="prodcuts-table" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Label</th>
+            <th>Description</th>
+            <th>Rate </th>
+            <th>Msp</th>
+            <th>Unique Code/SKU</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+    const api_url = "http://127.0.0.1:3000";
+    // getProducts();
+    function getProducts() {
+        $.ajax({
+            url: `${api_url}/product/all`,
+            type: 'get',
+            contentType: 'application/json',
+            success: function(data, textStatus, jqXHR){
+                if(data.status === "success"){
+                    if(jqXHR.status === 200){
+                        console.log("data.data",data.data);
+                        $('#prodcuts-table').dataTable({
+                            data: data.data,
+                            destroy: true,
+                            columns: [
+                                {data: 'name'},
+                                {data: 'label'},
+                                {data: 'description'},
+                                {data: 'rate '},
+                                {data: 'msp'},
+                                {data: 'sku'}
+                            ],
+                            responsive: true
+                        });
+                    }
+                    else if(jqXHR.status === 204){
+
+                    }
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                console.log(jqXHR.responseJSON.message);
+                // $(".login_alert_div").empty().hide().addClass('alert-danger').removeClass('alert-success');
+                // $(".login_alert_div").text(jqXHR.responseJSON.message).show().fadeTo(5000, 500).slideUp(500);
+            }
+        });
+    }
+    $(document).ready(function () {
+
+        $(document).on('submit', '.add-product', function () {
+            const name = $('input[name="name"]').val();
+            const label = $('input[name="label"]').val();
+            const description = $('input[name="description"]').val();
+            const rate = $('input[name="rate"]').val();
+            const sku = $('input[name="sku"]').val();
+
+            let form_data = {name,label,description,rate,sku};
+            form_data = JSON.stringify(form_data);
+
+            $.ajax({
+                url: `${api_url}/product/new`,
+                type: 'POST',
+                contentType :'application/json',
+                headers: {
+                    'Access-Control-Allow-Origin': api_url,
+                    'Access-Control-Allow-Credentials': 'true'
+                },
+                data: form_data,
+                success: function(data, textStatus, jqXHR){
+                    if(jqXHR.status == 200){
+                        $('.product_alert_div').removeClass('alert-danger').addClass('alert-success');
+                        $(".product_alert_div").html("Inserted successfully").show().fadeTo(2000, 500).slideUp(500).hide(0,function () {
+                            getProducts();
+                        });
+                    }
+                    else{
+                        $(".product_alert_div").empty().hide().removeClass('alert-success').addClass('alert-danger');
+                        $(".product_alert_div").text("Something didn't work").show().fadeTo(2000, 500).slideUp(500);
+                    }
+                },
+                error: function(data,bb,cc){
+                    $(".settings-form-alert").text("Something didn't work").show(0).delay(3000).hide(0);
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>

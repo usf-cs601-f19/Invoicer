@@ -40,6 +40,12 @@ Database - MySQL 8
 
 Endpoint Testing – Postman
 
+Libraries Used-
+
+**Font Awesome (icon)** - `https://fontawesome.com/v4.7.0/`
+
+**Datatable** - `https://datatables.net/`
+
 # Timeline
 
 10/16 Milestone #1:
