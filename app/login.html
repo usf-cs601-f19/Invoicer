@@ -1,22 +1,21 @@
 <!doctype html>
 <html lang="">
 <head>
+    <title>Invoicing Solution - Login</title>
     <meta charset="utf-8">
-    <title>Invoicing Solution</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="stylesheet" href="assets/css/main.css">
-</head>
 
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
+
+    <script src="assets/js/vendor/jquery.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="assets/css/main.css">
+
+    <link rel="apple-touch-icon" href="icon.png">
+</head>
 <body>
 <!--[if IE]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
@@ -27,10 +26,10 @@
             <div class="panel panel-login">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-xs-12 text-center">
+                        <div class="col-xs-6 text-center">
                             <a href="#" class="active" id="login-form-link">Login</a>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-6 div-border-left">
                             <a href="register.html" id="register-form-link">Register</a>
                         </div>
                     </div>
@@ -39,51 +38,20 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <form id="login-form" role="form" style="display: block;" method="post" action="register.html">
+                            <form id="login-form" style="display: block;">
                                 <div class="form-group">
-                                    <input type="text" name="mobile" id="mobile" tabindex="1" class="form-control" placeholder="Username" value="">
+                                    <label>Username</label>
+                                    <input type="number" step="1" name="username" minlength="10" min="1000000000" name="mobile" id="mobile" tabindex="1" class="form-control" placeholder="Username (Mobile)" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+                                    <label>Password</label>
+                                    <input type="password" required  name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
                                 </div>
-                                <div class="alertforlogin alert" style="display: none"></div>
+                                <div class="login_alert_div alert" style="display: none"></div>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
                                             <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                            <form id="register-form"  method="post" role="form" style="display: none;">
-                                <div class="form-group">
-                                    <input type="text" name="name" id="name" tabindex="1" class="form-control" placeholder="Username" value="">
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
-                                </div>
-
-                                <div class="form-group">
-                                    <input type="text" name="mobile" id="mobile_1" tabindex="1" class="form-control" placeholder="mobile" value="">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" name="password" id="password_1" tabindex="1" class="form-control" placeholder="Enter password" value="">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" name="confirm_password" id="confirm_password_1" tabindex="2" class="form-control" placeholder="Confirm Password">
-                                </div>
-
-                                <div class="form-group">
-                                    <input type="text" name="company_name" id="company_name" tabindex="1" class="form-control" placeholder="Company Name" value="">
-                                </div>
-
-                                <div class="form-group">
-                                    <input type="text" name="company_website" id="company_website" tabindex="1" class="form-control" placeholder="Company website" value="">
-                                </div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now">
                                         </div>
                                     </div>
                                 </div>
@@ -95,6 +63,62 @@
         </div>
     </div>
 </div>
-<script src="js/main.js"></script>
+<script>
+    const api_url = "http://127.0.0.1:3000";
+    function setCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
+
+    if (sessionStorage.getItem('status') != null){
+        //redirect to page
+        window.location = "customer.html";
+    }
+
+    $(document).on("submit", "#login-form", function(){
+        const username = $(this).find('input[name="username"]').val();
+        const password = $(this).find('input[name="password"]').val();
+
+        if(!username.length){
+            $('.login_alert_div').addClass('alert-danger');
+            $(".login_alert_div").text("Username cannot be left blank").show(0).delay(3000).hide(0);
+        }
+        else if(!password.length){
+            $('.login_alert_div').addClass('alert-danger');
+            $(".login_alert_div").text("Password cannot be left blank").show(0).delay(3000).hide(0);
+            return false;
+        }
+
+        let detailJSON = JSON.stringify({username, password});
+
+        $.ajax({
+            url: `${api_url}/user/login`,
+            type: 'post',
+            data: detailJSON,
+            contentType: 'application/json',
+            success: function(data, textStatus, jqXHR){
+                if(jqXHR.status === 200 && data.status === "success"){
+                    let cookieName = "inv_cookie";
+                    setCookie(cookieName,encodeURIComponent(JSON.stringify(data.data[0])),1);
+                    $('.login_alert_div').removeClass('alert-danger').addClass('alert-success');
+                    $(".login_alert_div").text("Logged in. Redirecting....").show().fadeTo(5000, 500).slideUp(500);
+                    sessionStorage.setItem('status','loggedIn')
+                    window.location = "customer.html";
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                console.log("error in sign-in");
+                $(".login_alert_div").empty().hide().addClass('alert-danger').removeClass('alert-success');
+                $(".login_alert_div").text(jqXHR.responseJSON.message).show().fadeTo(5000, 500).slideUp(500);
+            }
+        });
+        return false;
+    });
+</script>
 </body>
 </html>
