@@ -8,14 +8,17 @@ const cookieSession = require('cookie-session')
 const cors = require('cors');
 
 const path = require('path');
-const logger = require('morgan');
 const bodyParser = require('body-parser');
+
+const user = require('./models/user')
+const User = new user();
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/user');
 const productsRouter = require('./routes/product');
 const customerRouter = require('./routes/customer');
 
+// Creating the web app from express
 const app = express();
 
 app.use(cookieSession({
@@ -23,25 +26,6 @@ app.use(cookieSession({
     keys: ['key1', 'key2']
 }))
 
-// Middleware to check if user logged in
-app.use(function (req, res, next) {
-
-    // if in any of the following urls, session status will not be checked
-    if(['/','/user/login','/user/register'].includes(req.url)){
-        next();
-    }
-    else if(req.session.hasOwnProperty('user') )
-        next();
-    else{
-        res.status(401).send({
-            status: "error",
-            err_code: "UNAUTHORIZED",
-            message: "User is not logged in"
-        });
-    }
-})
-
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -55,10 +39,31 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 86400 }
 }));
-
+// Allowing JSON to be parsed as request parameter
 app.use(bodyParser.json({type: '*/*'}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
+
+
+// Middleware to check if user logged in
+app.use(function (req, res, next) {
+
+    // if in any of the following urls, session status will not be checked
+    if(['/','/user/login','/user/register'].includes(req.url)){
+        next();
+    }
+    else if(req.headers.hasOwnProperty('authorization')){
+        User.authenticateToken(req, res, next);
+    }
+    else{
+        res.status(401).send({
+            status: "error",
+            err_code: "UNAUTHORIZED",
+            message: "User is not logged in"
+        });
+    }
+})
+
 
 // All the routers defined above
 app.use('/', indexRouter);
@@ -66,7 +71,7 @@ app.use('/user', usersRouter);
 app.use('/product', productsRouter);
 app.use('/customer', customerRouter);
 
-// Custom Logs
+// Custom Console Logs
 Object.defineProperty(global, '__stack', {
     get: function() {
         const orig = Error.prepareStackTrace;

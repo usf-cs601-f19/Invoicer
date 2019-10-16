@@ -26,17 +26,18 @@ class Customer{
             assert(req.body.email, 'Email is required');
             assert(req.body.company_name, 'Company Name is required');
             assert(req.body.type_id, 'User Type is required');
+            assert(req.body.tin_number, 'TIN Number is required');
 
             let name = req.body.name;
             let mobile = req.body.mobile;
-            let email = req.body.email;
             let company_name = req.body.company_name;
-            let company_website = req.body.company_website;
+            let email = req.body.email;
             let type_id = req.body.type_id;
+            let tin_number = req.body.tin_number;
 
             connectionPool.query(`INSERT IGNORE into invoicing.customer(name, mobile, company_name, 
-       company_website, email,type_id,user_id) VALUES(?,?,?,?,?,?,?)`, [
-                name, mobile, company_name, company_website, email,type_id, req.session.user.id ], function(error, result, fields) {
+                email,type_id,user_id,tin_no) VALUES(?,?,?,?,?,?,?)`, [
+                name, mobile, company_name, email,type_id, req.user_id,tin_number], function(error, result, fields) {
                 if (error) {
                     res.status(500).send({
                         status: "error",
@@ -53,7 +54,7 @@ class Customer{
                 else{
                     res.status(422).send({
                         status: "error",
-                        message: "Customer already exists"
+                        message: "Customer with same email already exists"
                     });
                 }
             });
@@ -85,8 +86,19 @@ class Customer{
      */
     getCustomers(req, res){
         try {
-
-            connectionPool.query(`SELECT id customer_id,name, mobile, company_name, company_website, email,type_id FROM invoicing.customer where user_id = ?`, req.session.user.id,
+            
+            connectionPool.query(`
+            SELECT cst.id  customer_id, 
+                   cst.name, 
+                   cst.mobile, 
+                   cst.company_name, 
+                   cst.email,
+                   cst.tin_no tin_number, 
+                   ut.name company_type 
+            FROM   invoicing.customer cst 
+                   INNER JOIN user_type ut 
+                           ON cst.type_id = ut.id 
+            WHERE  user_id = ? `, req.user_id,
                 function(error, result, fields) {
                     if (error) {
                         res.status(500).send({
@@ -135,11 +147,10 @@ class Customer{
      */
     getCustomer(req, res){
         try {
-            assert(req.params.id, 'Customer Id not provided');
-            assert(req.session.user.id, 'User not logged in');
+            assert(req.params.customer_id, 'Customer Id not provided');
 
             connectionPool.query(`SELECT * FROM invoicing.customer where id = ? and user_id = ?`,
-                [req.params.id, req.session.user.id], function(error, result, fields) {
+                [req.params.customer_id, req.user_id], function(error, result, fields) {
                     if (error) {
                         res.status(500).send({
                             status: "error",

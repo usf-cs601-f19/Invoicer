@@ -7,7 +7,7 @@ router.get('/all', function(req, res) {
     Customer.getCustomers(req,res);
 });
 
-router.get('/:id', function(req, res) {
+router.get('/:customer_id', function(req, res) {
     Customer.getCustomer(req,res);
 });
 

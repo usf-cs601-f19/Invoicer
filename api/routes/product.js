@@ -9,7 +9,7 @@ router.get('/all', function(req, res, next) {
 });
 
 /* GET specific product. */
-router.get('/:id', function(req, res, next) {
+router.get('/:product_id', function(req, res, next) {
     Product.getProduct(req,res);
 });
 

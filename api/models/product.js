@@ -21,27 +21,34 @@ class Product{
      */
     addProduct(req, res){
         try {
-            
             assert(req.body.name,"Name is required");
             assert(req.body.description,"Description is required");
-            assert(req.body.rate,"Rate  is required");
-            assert(req.body.unique_code,"SKU/Unique Code is required");
-            assert(req.session.user.id, 'User not logged in');
+            assert(req.body.rate,"Rate is required");
+            assert(req.body.sku,"SKU/Unique Code is required");
+            assert(req.user_id, 'User not logged in');
 
             let name = req.body.name;
             let description = req.body.description;
             let rate  = req.body.rate ;
-            let unique_code = req.body.unique_code;
+            let sku = req.body.sku;
             let label = req.body.hasOwnProperty('label') ? req.body.label : "";
 
             connectionPool.query(`INSERT into invoicing.product(name,label,description,rate ,sku,user_id) 
-            VALUES(?,?,?,?,?,?)`, [name,label,description,rate,unique_code,req.session.user.id], function(error, result, fields) {
+            VALUES(?,?,?,?,?,?)`, [name,label,description,rate,sku,req.user_id], function(error, result, fields) {
                 if (error) {
-                    res.status(500).send({
-                        status: "error",
-                        code: error.code,
-                        message: error.sqlMessage
-                    });
+                    if(error.code==='ER_DUP_ENTRY'){
+                        res.status(422).send({
+                            status: "error",
+                            message: "Product with this SKU already exist"
+                        });
+                    }
+                    else{
+                        res.status(500).send({
+                            status: "error",
+                            code: error.code,
+                            message: error.sqlMessage
+                        });
+                    }
                 } else if(result.insertId > 0){
                     res.status(200).send({
                         status: "success",
@@ -84,9 +91,9 @@ class Product{
      */
     getProducts(req, res){
         try {
-            assert(req.session.user.id, 'User not logged in');
+            assert(req.user_id, 'User Id not found');
 
-            connectionPool.query(`SELECT * FROM invoicing.product where user_id = ?`, req.session.user.id,
+            connectionPool.query(`SELECT * FROM invoicing.product where user_id = ?`, req.user_id,
                 function(error, result, fields) {
                     if (error) {
                         res.status(500).send({
@@ -135,10 +142,10 @@ class Product{
     getProduct(req, res){
         try {
             assert(req.params.id, 'Product Id not provided');
-            assert(req.session.user.id, 'User not logged in');
+            assert(req.user_id, 'User not logged in');
 
             connectionPool.query(`SELECT * FROM invoicing.product where id = ? and user_id = ?`,
-                [req.params.id, req.session.user.id], function(error, result, fields) {
+                [req.params.id, req.user_id], function(error, result, fields) {
                     if (error) {
                         res.status(500).send({
                             status: "error",
