@@ -105,7 +105,7 @@
     }
 
     $(document).on("keydown", "#username", function(event){
-        if (event.keyCode == 8 || (event.keyCode > 48 &&  event.keyCode < 57))
+        if (event.keyCode == 8 || (event.keyCode >= 48 &&  event.keyCode <= 57))
             return true;
         else
             return false;
