@@ -46,6 +46,8 @@ Endpoint Testing – Postman
 
 **Datatable** - `https://datatables.net/`
 
+**Apache 2** - To run front-end
+
 # Timeline
 
 10/16 Milestone #1:
