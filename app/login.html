@@ -65,19 +65,20 @@
 </div>
 <script>
     const api_url = "http://127.0.0.1:3000";
-    function setCookie(name,value,days) {
-        var expires = "";
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days*24*60*60*1000));
-            expires = "; expires=" + date.toUTCString();
+
+    if (typeof(Storage) !== "undefined") {
+        // Code for localStorage/sessionStorage.
+        let key = localStorage.getItem('akrandom');
+        if(key !== null){
+            window.location = "customers.html";
         }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
+    else {
+        $('#login-form').html('<h1 style="margin: 55px;text-align: center">Browser not supported</h1>')
     }
 
-
     $(document).on("keydown", "#username", function(event){
-        if (event.keyCode == 8 || (event.keyCode > 48 &&  event.keyCode < 57))
+        if (event.keyCode == 8 || (event.keyCode >= 48 &&  event.keyCode <= 58))
             return true;
         else
             return false;
@@ -109,7 +110,7 @@
                     $('.login_alert_div').removeClass('alert-danger').addClass('alert-success');
                     $(".login_alert_div").text("Logged in. Redirecting....").show().fadeTo(5000, 500).slideUp(500);
                     let cookieName = "inv_cookie";
-                    setCookie(cookieName,encodeURIComponent(JSON.stringify(data.data[0])),1);
+                    localStorage.setItem('akrandom',data.data);
                     window.location = "customers.html";
                 }
             },
