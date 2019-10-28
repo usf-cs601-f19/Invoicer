@@ -68,3 +68,7 @@ Endpoint Testing – Postman
 > Running the API
 
 To run the API, Goto api folder, open terminal and type `npm start`
+
+
+###### Security
+> SQL Injection - `SQL queries are escaped`
