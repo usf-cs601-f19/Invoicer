@@ -17,6 +17,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/user');
 const productsRouter = require('./routes/product');
 const customerRouter = require('./routes/customer');
+const invoiceRouter = require('./routes/invoice');
 
 // Creating the web app from express
 const app = express();
@@ -70,6 +71,7 @@ app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/product', productsRouter);
 app.use('/customer', customerRouter);
+app.use('/invoice', invoiceRouter);
 
 // Custom Console Logs
 Object.defineProperty(global, '__stack', {

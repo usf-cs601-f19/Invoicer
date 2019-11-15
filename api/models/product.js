@@ -1,6 +1,6 @@
 const config = require('config');
 const mysql = require("mysql");
-const assert = require('assert')
+const assert = require('assert');
 const AssertionError = assert.AssertionError;
 
 const connectionPool = mysql.createPool({
@@ -39,7 +39,7 @@ class Product{
                     if(error.code==='ER_DUP_ENTRY'){
                         res.status(422).send({
                             status: "error",
-                            message: "Product with this SKU already exist"
+                            message: "Product with this SKU already exists"
                         });
                     }
                     else{
@@ -59,7 +59,7 @@ class Product{
                 else{
                     res.status(422).send({
                         status: "error",
-                        message: "Product with this SKU already exist"
+                        message: "Product with this SKU already exists"
                     });
                 }
             });
@@ -86,7 +86,7 @@ class Product{
      * This function returns all the products of a user
      * @param req request
      * @param res response
-     * @return Returns the list of products if they exist else returns blank result with 204 statuscode.
+     * @return Returns the list of products if they exists else returns blank result with 204 statuscode.
      *         Returns error type & message in case of error
      */
     getProducts(req, res){
@@ -137,7 +137,7 @@ class Product{
      * This function returns a single product as per the product id
      * @param req request
      * @param res response
-     * @return Returns a product if it exist. Returns error in case of error
+     * @return Returns a product if it exists. Returns error in case of error
      */
     getProduct(req, res){
         try {

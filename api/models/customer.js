@@ -81,7 +81,7 @@ class Customer{
      * This function returns all the customers added by a user
      * @param req request
      * @param res response
-     * @return Returns the list of customers if they exist else returns blank result with 204 statuscode.
+     * @return Returns the list of customers if they exists else returns blank result with 204 statuscode.
      *         Returns error type & message in case of error
      */
     getCustomers(req, res){
@@ -143,7 +143,7 @@ class Customer{
      * This function returns a single customer data as per the customer id
      * @param req request
      * @param res response
-     * @return Returns a customer data if it exist. Returns error in case of error
+     * @return Returns a customer data if it exists. Returns error in case of error
      */
     getCustomer(req, res){
         try {
