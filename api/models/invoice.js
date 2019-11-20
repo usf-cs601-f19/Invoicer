@@ -16,8 +16,8 @@ class Invoice {
 
     /**
      * This methods inserts a new invoice data to the DB
-     * @param req request
-     * @param res response
+     * @param req request object
+     * @param res response object
      * @return Returns error if error inserting invoice data, else return success message
      */
     addInvoice(req, res) {
@@ -93,7 +93,7 @@ class Invoice {
                         columnValuesStr += ` (${result.insertId},${data.product_id},${data.quantity},${data.rate}),`
                     });
                     columnValuesStr = columnValuesStr.slice(0, -1);
-                    console.log("columnValuesStr",columnValuesStr);
+                    console.log("columnValuesStr", columnValuesStr);
                     connectionPool.query(`INSERT INTO invoicing.invoice_product (invoice_id,product_id,quantity,rate) VALUES 
                                     ${columnValuesStr};`, function (error, result, fields) {
                         if (error) {
@@ -109,15 +109,13 @@ class Invoice {
                                     message: error.sqlMessage
                                 });
                             }
-                        }
-                        else if (result.insertId > 0){
+                        } else if (result.insertId > 0) {
                             res.status(200).send({
                                 status: "success",
                                 data: "",
                                 message: "Invoice added successfully"
                             });
-                        }
-                        else{
+                        } else {
                             res.status(422).send({
                                 status: "error",
                                 message: "Invoice with this product already exists"
@@ -126,8 +124,7 @@ class Invoice {
                     });
                 }
             });
-        }
-        catch(e) {
+        } catch (e) {
             if (e instanceof AssertionError) {
                 console.log(req.url, "-", __function, "-", "AssertionError : ", e.message);
                 res.status(500).send({
@@ -144,48 +141,149 @@ class Invoice {
         }
     }
 
-/**
- * This function returns all the invoices of a user
- * @param req request
- * @param res response
- * @return Returns the list of invoices if they exists else returns blank result with 204 statuscode.
- *         Returns error type & message in case of error
- */
-getInvoices(req, res)
-{
-    try {
-        assert(req.user_id, 'User Id not found');
+    /**
+     * This function returns all the invoices of a user
+     * @param req request object
+     * @param res response object
+     * @return Returns the list of invoices if they exists else returns blank result with 204 statuscode.
+     *         Returns error type & message in case of error
+     */
+    getInvoices(req, res) {
+        try {
+            assert(req.user_id, 'User Id not found');
 
-        connectionPool.query(`SELECT *
-                              FROM invoicing.invoice
-                              where user_id = ?`, req.user_id,
-            function (error, result, fields) {
-                if (error) {
-                    res.status(500).send({
-                        status: "error",
-                        code: error.code,
-                        message: error.sqlMessage
-                    });
-                } else {
-                    if (result.length > 0) {
-                        res.status(200).send({
-                            status: "success",
-                            data: result,
-                            length: result.length
+            connectionPool.query(`SELECT cst.name customer_name,
+                                         inv.id,
+                                         inv.due_amt,
+                                         inv.inv_number,
+                                         inv.inv_date,
+                                         inv.due_date,
+                                         inv.created_on
+                                  FROM invoicing.invoice inv,
+                                       invoicing.customer cst
+                                  WHERE inv.customer_id = cst.id
+                                    AND inv.user_id = ?`, req.user_id,
+                function (error, result, fields) {
+                    if (error) {
+                        res.status(500).send({
+                            status: "error",
+                            code: error.code,
+                            message: error.sqlMessage
                         });
                     } else {
-                        res.status(204).send();
+                        if (result.length > 0) {
+                            res.status(200).send({
+                                status: "success",
+                                data: result,
+                                length: result.length
+                            });
+                        } else {
+                            res.status(204).send();
+                        }
                     }
-                }
-            });
-    } catch (e) {
-        if (e instanceof AssertionError) {
-            console.log(req.url, "-", __function, "-", "AssertionError : ", e.message);
-            res.status(500).send({
-                status: "AssertionError",
-                message: e.message
-            });
-        } else {
+                });
+        } catch (e) {
+            if (e instanceof AssertionError) {
+                console.log(req.url, "-", __function, "-", "AssertionError : ", e.message);
+                res.status(500).send({
+                    status: "AssertionError",
+                    message: e.message
+                });
+            } else {
+                console.log(req.url, "-", __function, "-", "Error : ", e.message);
+                res.status(500).send({
+                    status: "error",
+                    message: e.message
+                });
+            }
+        }
+    }
+
+    /**
+     * This function returns a single invoice as per the invoice id
+     * @param req request object
+     * @param res response object
+     * @return Returns a invoice if it exists. Returns error in case of error
+     */
+    getInvoice(req, res) {
+        try {
+            assert(req.params.id, 'Invoice Id not provided');
+            assert(req.user_id, 'User not logged in');
+
+            connectionPool.query(`SELECT *
+                                  FROM invoicing.invoice
+                                  where id = ?
+                                    and user_id = ?`,
+                [req.params.id, req.user_id], function (error, result, fields) {
+                    if (error) {
+                        res.status(500).send({
+                            status: "error",
+                            code: error.code,
+                            message: error.sqlMessage
+                        });
+                    } else {
+                        if (result.length > 0) {
+                            res.status(200).send({
+                                status: "success",
+                                data: result[0],
+                                length: result.length
+                            });
+                        } else {
+                            res.status(204).send();
+                        }
+                    }
+                });
+        } catch (e) {
+            if (e instanceof AssertionError) {
+                console.log(req.url, "-", __function, "-", "AssertionError : ", e.message);
+                res.status(500).send({
+                    status: "AssertionError",
+                    message: e.message
+                });
+            } else {
+                console.log(req.url, "-", __function, "-", "Error : ", e.message);
+                res.status(500).send({
+                    status: "error",
+                    message: e.message
+                });
+            }
+        }
+    }
+    /**
+     * This function deletes a single invoice as per the invoice id
+     * @param req request object
+     * @param res response object
+     * @return Returns true if invoice deleted successfully. Returns error in case of error
+     */
+    getInvoice(req, res) {
+        try {
+            assert(req.params.id, 'Invoice Id not provided');
+            assert(req.user_id, 'User not logged in');
+
+            connectionPool.query(`DELETE
+                                  FROM invoicing.invoice
+                                  where id = ?
+                                    and user_id = ?`,
+                [req.params.id, req.user_id], function (error, result, fields) {
+                    if (error) {
+                        res.status(500).send({
+                            status: "error",
+                            code: error.code,
+                            message: error.sqlMessage
+                        });
+                    } else {
+                        if (result.affectedRows > 0) {
+                            res.status(200).send({
+                                status: "success",
+                                data: result[0],
+                                length: result.length
+                            });
+                        } else {
+                            res.status(204).send();
+                        }
+                    }
+                });
+        } catch (e) {
             console.log(req.url, "-", __function, "-", "Error : ", e.message);
             res.status(500).send({
                 status: "error",
@@ -193,59 +291,6 @@ getInvoices(req, res)
             });
         }
     }
-}
-
-/**
- * This function returns a single invoice as per the invoice id
- * @param req request
- * @param res response
- * @return Returns a invoice if it exists. Returns error in case of error
- */
-getInvoice(req, res)
-{
-    try {
-        assert(req.params.id, 'Invoice Id not provided');
-        assert(req.user_id, 'User not logged in');
-
-        connectionPool.query(`SELECT *
-                              FROM invoicing.invoice
-                              where id = ?
-                                and user_id = ?`,
-            [req.params.id, req.user_id], function (error, result, fields) {
-                if (error) {
-                    res.status(500).send({
-                        status: "error",
-                        code: error.code,
-                        message: error.sqlMessage
-                    });
-                } else {
-                    if (result.length > 0) {
-                        res.status(200).send({
-                            status: "success",
-                            data: result[0],
-                            length: result.length
-                        });
-                    } else {
-                        res.status(204).send();
-                    }
-                }
-            });
-    } catch (e) {
-        if (e instanceof AssertionError) {
-            console.log(req.url, "-", __function, "-", "AssertionError : ", e.message);
-            res.status(500).send({
-                status: "AssertionError",
-                message: e.message
-            });
-        } else {
-            console.log(req.url, "-", __function, "-", "Error : ", e.message);
-            res.status(500).send({
-                status: "error",
-                message: e.message
-            });
-        }
-    }
-}
 }
 
 module.exports = Invoice;

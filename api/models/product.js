@@ -15,8 +15,8 @@ class Product{
 
     /**
      * This methods inserts a product data to the DB
-     * @param req request
-     * @param res response
+     * @param req request object
+     * @param res response object
      * @return Returns error if error inserting product data, else return success message
      */
     addProduct(req, res){
@@ -84,8 +84,8 @@ class Product{
 
     /**
      * This function returns all the products of a user
-     * @param req request
-     * @param res response
+     * @param req request object
+     * @param res response object
      * @return Returns the list of products if they exists else returns blank result with 204 statuscode.
      *         Returns error type & message in case of error
      */
@@ -135,8 +135,8 @@ class Product{
 
     /**
      * This function returns a single product as per the product id
-     * @param req request
-     * @param res response
+     * @param req request object
+     * @param res response object
      * @return Returns a product if it exists. Returns error in case of error
      */
     getProduct(req, res){

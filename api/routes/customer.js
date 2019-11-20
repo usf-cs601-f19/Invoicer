@@ -11,6 +11,10 @@ router.get('/:customer_id', function(req, res) {
     Customer.getCustomer(req,res);
 });
 
+router.delete('/:customer_id', function(req, res) {
+    Customer.deleteCustomer(req,res);
+});
+
 router.post('/new', function(req, res) {
     Customer.addCustomer(req,res);
 });

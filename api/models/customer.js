@@ -15,8 +15,8 @@ class Customer{
 
     /**
      * This methods inserts a customer data to the DB
-     * @param req request
-     * @param res response
+     * @param req request object
+     * @param res response object
      * @return Returns error if error inserting customer data, else return success message
      */
     addCustomer(req, res){
@@ -78,9 +78,9 @@ class Customer{
     }
 
     /**
-     * This function returns all the customers added by a user
-     * @param req request
-     * @param res response
+     * This function returns all the customers requested by a user
+     * @param req request object
+     * @param res response object
      * @return Returns the list of customers if they exists else returns blank result with 204 statuscode.
      *         Returns error type & message in case of error
      */
@@ -141,8 +141,8 @@ class Customer{
 
     /**
      * This function returns a single customer data as per the customer id
-     * @param req request
-     * @param res response
+     * @param req request object
+     * @param res response object
      * @return Returns a customer data if it exists. Returns error in case of error
      */
     getCustomer(req, res){
@@ -186,6 +186,46 @@ class Customer{
                     message: e.message
                 });
             }
+        }
+    }
+
+    /**
+     * This function deletes a single customer along with its data as per the customer id
+     * @param req request object
+     * @param res response object
+     * @return Returns true if data deleted successfully. Returns error in case of error
+     */
+    deleteCustomer(req, res){
+        try {
+            assert(req.params.customer_id, 'Customer Id not provided');
+
+            connectionPool.query(`DELETE FROM invoicing.customer where id = ? and user_id = ?`,
+                [req.params.customer_id, req.user_id], function(error, result, fields) {
+                    if (error) {
+                        res.status(500).send({
+                            status: "error",
+                            code: error.code,
+                            message: error.sqlMessage
+                        });
+                    } else{
+                        if(result.affectedRows>0){
+                            res.status(200).send({
+                                status: "success",
+                                data: ""
+                            });
+                        }
+                        else{
+                            res.status(204).send();
+                        }
+                    }
+                });
+        }
+        catch (e) {
+            console.log(req.url,"-",__function,"-","Error : ",e.message);
+            res.status(500).send({
+                status: "error",
+                message: e.message
+            });
         }
     }
 }

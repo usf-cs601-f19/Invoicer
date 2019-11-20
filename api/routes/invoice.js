@@ -10,7 +10,12 @@ router.get('/all', function(req, res, next) {
 
 /* GET specific invoice. */
 router.get('/:invoice_id', function(req, res, next) {
-    Product.getInvoice(req,res);
+    Invoice.getInvoice(req,res);
+});
+
+/* DELETE specific invoice. */
+router.delete('/:invoice_id', function(req, res, next) {
+    Invoice.deleteInvoice(req,res);
 });
 
 router.post('/new', function(req, res, next) {
