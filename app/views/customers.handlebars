@@ -1,27 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Customers</title>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/jquery.dataTables.min.css">
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-
-    <script src="assets/js/vendor/jquery.min.js"></script>
-    <script src="assets/js/vendor/bootstrap.min.js"></script>
-    <script src="assets/js/vendor/jquery.dataTables.min.js"></script>
-
-    <link rel="stylesheet" href="assets/css/main.css">
-</head>
-<body>
 <nav class="navbar navbar-default">
+    <a href="#" class="navbar-left"><img class="custom_brand_logo" src="/static/images/icon.png" alt="logo"  style="float: left;" height="50"></a>
     <div class="container-fluid">
         <ul class="nav nav-tabs navbar-nav navbar-right">
-            <li class=""><a href="products.html"><i class="fa fa-th-list" aria-hidden="true"></i> Products</a></li>
-            <!--            <li class=""><a href="invoices.html"><i class="fa fa-file-text-o" aria-hidden="true"></i> Invoices</a></li>-->
+            <li class=""><a href="/products"><i class="fa fa-th-list" aria-hidden="true"></i> Products</a></li>
+            <li class=""><a href="/invoices"><i class="fa fa-file-text-o" aria-hidden="true"></i> Invoices</a></li>
             <li class="active"><a href="#"><i class="fa fa-users" aria-hidden="true"></i> Customers</a></li>
             <li class="logout-root"><a href="#logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Log Out</a></li>
         </ul>
@@ -99,7 +81,7 @@
         <button type="submit" class="btn submit-btn">Submit</button>
     </form>
     <hr>
-    <table id="customers-table" class="display" cellspacing="0" width="100%">
+    <table id="customers-table" class="display:none" cellspacing="0" width="100%">
         <thead>
         <tr>
             <th>Name</th>
@@ -113,7 +95,5 @@
     </table>
     <div class="no_data_found" style="display: none"></div>
 </div>
-<script type="text/javascript" src="assets/js/customer.js"></script>
-<script type="text/javascript" src="assets/js/logout.js"></script>
-</body>
-</html>
+<script type="text/javascript" src="static/javascripts/customer.js"></script>
+<script type="text/javascript" src="static/javascripts/logout.js"></script>

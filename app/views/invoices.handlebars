@@ -1,0 +1,269 @@
+<nav class="navbar navbar-default">
+    <a href="#" class="navbar-left"><img class="custom_brand_logo" src="/static/images/icon.png" alt="logo"  style="float: left;" height="50"></a>
+    <div class="container-fluid">
+        <ul class="nav nav-tabs navbar-nav navbar-right">
+            <li class=""><a href="/products"><i class="fa fa-th-list" aria-hidden="true"></i> Products</a></li>
+            <li class="active"><a href="#"><i class="fa fa-file-text-o" aria-hidden="true"></i> Invoices</a></li>
+            <li class=""><a href="/customers"><i class="fa fa-users" aria-hidden="true"></i> Customers</a></li>
+            <li class="logout-root"><a href="#logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Log Out</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="col-md-6 ">
+        <h2>Invoices</h2>
+    </div>
+    <div class="col-md-6 ">
+        <div class="add_more_button add_new_invoice" style="width: 124px"><i class="fa fa-plus" aria-hidden="true"></i> Add new Invoice</div>
+        <div class="remove_more_button remove_new_invoice" style="width: 124px; display: none"><i class="fa fa-times" aria-hidden="true"></i> Cancel</div>
+    </div>
+</div>
+<div class="container">
+    <form class="add-invoice-form" style="">
+        <hr>
+        <div class="invoice">
+            <div class="two-col clearfix">
+                <div class="title">
+                    <input class="form-control input-label" tabindex="10" type="text" maxlength="45" placeholder="Invoice Title">
+                    <div class="subtitle">
+                        <div class="input-group">
+                            <span class="input-group-addon">#</span>
+                            <input class="form-control" tabindex="11">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="contact from">
+                    <div class="value">
+                        <div class="expandingText" style="position: relative;">
+                            <textarea class="form-control " placeholder="Who is this invoice from? (required)" tabindex="15" required="" expanding-textarea="" style="position: absolute; height: 100%; resize: none;"></textarea>
+                            <pre class="textareaClone" style="visibility: hidden; border: 1px solid; white-space: pre-wrap; line-height: 20px; text-decoration: none solid rgb(85, 85, 85); font-size: 14px; font-family: ColfaxWeb, &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; text-align: start; word-break: normal; padding: 8px 12px; margin-bottom: 0px;">
+                                <div>
+                                </div></pre></div>
+                    </div>
+                </div>
+                <div class="contact to">
+                    <div class="field">
+                        <select class="select-label form-control">
+                            <option value="test" class="test">Select</option>
+                        </select>
+                    </div>
+                    <div class="value">
+                        <div class="expandingText" style="position: relative;"><textarea class="form-control " placeholder="Who is this invoice to? (required)" tabindex="17" required="" expanding-textarea="" style="position: absolute; height: 100%; resize: none;"></textarea><pre class="textareaClone" style="visibility: hidden; border: 1px solid; white-space: pre-wrap; line-height: 20px; text-decoration: none solid rgb(85, 85, 85); font-size: 14px; font-family: ColfaxWeb, &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; text-align: start; word-break: normal; padding: 8px 12px; margin-bottom: 0px;"><div> </div></pre></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col fields">
+                <div class="input-group addon-input">
+                    <input class="input-label form-control " tabindex="19">
+                    <div class="input-group-addon">
+                        <input class="form-control datepicker date  hasDatepicker" tabindex="20" date-picker="" id="dp1573794920456">
+                    </div>
+                </div>
+                <div class="input-group addon-input">
+                    <input class="input-label form-control " tabindex="21">
+                    <div class="input-group-addon">
+                        <input class="form-control " tabindex="22">
+                    </div>
+                </div>
+                <div class="input-group addon-input">
+                    <input class="input-label form-control " tabindex="23">
+                    <div class="input-group-addon">
+                        <input class="form-control datepicker due-date  hasDatepicker" tabindex="24" date-picker="" id="dp1573794920457">
+                    </div>
+                </div>
+                <div class="input-group addon-input highlight">
+                    <input class="input-label form-control " tabindex="25">
+                    <div class="input-group-addon value highlight"><span class="currency-amount"><span class="currency-symbol">$</span>0<span class="currency-decimal">.</span><span class="currency-fraction">00</span></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="items-holder">
+            <div class="items-table-header">
+                <div class="amount">
+                    <div class="field bordered">
+                        <input class="input-label form-control " tabindex="29">
+                    </div>
+                </div>
+                <div class="unit_cost">
+                    <div class="field bordered">
+                        <input class="input-label form-control " required="" tabindex="28">
+                    </div>
+                </div>
+                <div class="quantity">
+                    <div class="field bordered">
+                        <input class="input-label form-control " tabindex="27">
+                    </div>
+                </div>
+                <div class="name">
+                    <div class="field bordered">
+                        <input class="input-label form-control " tabindex="26">
+                    </div>
+                </div>
+            </div>
+            <div class="items-table">
+                <div class="item-row">
+                    <div class="main-row">
+                        <div class="delete ">
+                            <button type="button" class="delete-row"  tabindex="35">
+                                <i class="ion-close-round"></i>
+                            </button>
+                        </div>
+                        <div class="amount value"><span class="currency-amount"><span class="currency-symbol">$</span>0<span class="currency-decimal">.</span><span class="currency-fraction">00</span></span></div>
+                        <div class="unit_cost">
+                            <div currency="invoice.currency" input-amount="" class="><div class="input-amount dropdown"><div class="addon currency-sign">$</div><input class="form-control " type="number" step="any" autocomplete="off" tabindex="33"change="change()" required="required"><div class="addon percent">%</div><div class="addon selector"><button type="button" class="btn dropdown-toggle" aria-haspopup="true" aria-expanded="false"><span class="ion-chevron-down"></span></button></div><ul class="dropdown-menu dropdown-menu-right"><li class="active"><a href="#"  >Flat ($)</a></li><li><a href="#" >Percent (%)</a></li></ul></div></div>
+                </div>
+                <div class="quantity">
+                    <input type="number" step="any" class="form-control " autocomplete="off" tabindex="32" placeholder="Quantity" required="">
+                </div>
+                <div class="name">
+                    <div class="expandingText" style="position: relative;"><textarea class="form-control  expanding-init" tabindex="31" placeholder="Description of service or product..." expanding-textarea="" style="position: absolute; height: 100%; resize: none;"></textarea><pre class="textareaClone" style="visibility: hidden; border: 1px solid; white-space: pre-wrap; line-height: 20px; text-decoration: none solid rgb(85, 85, 85); font-size: 14px; font-family: ColfaxWeb, &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; word-break: normal; padding: 8px 12px; margin-bottom: 0px;"><div> </div></pre></div>
+                </div>
+            </div>
+        </div>
+</div>
+<div class="new-line">
+    <button type="button" class="btn btn-primary" tabindex="1000" >
+        <span class="ion-plus-round"></span>
+        Line Item
+    </button>
+</div>
+</div>
+
+<div class="two-col clearfix rates">
+    <div class="col col-offset">
+        <div class="input-group addon-input">
+            <input class="input-label form-control " tabindex="1001">
+            <div class="input-group-addon value deleteable"><span class="currency-amount"><span class="currency-symbol">$</span>0<span class="currency-decimal">.</span><span class="currency-fraction">00</span></span></div>
+        </div>
+
+        <div class="input-group addon-input ">
+            <div class="delete">
+                <button type="button" class="btn btn-link" >
+                    <span class="ion-close-round"></span>
+                </button>
+            </div>
+            <input class="input-label form-control " tabindex="1002">
+            <div class="input-group-addon input deleteable">
+                <div input-amount="" is-rate="discountIsRate" currency="invoice.currency" has-selector="true" class="><div class="addon currency-sign">$</div><input class="form-control " type="number" step="any" autocomplete="off" tabindex="1003"change="change()"><div class="addon percent">%</div><div class="addon selector"><button type="button" class="btn dropdown-toggle" aria-haspopup="true" aria-expanded="false"><span class="ion-chevron-down"></span></button></div><ul class="dropdown-menu dropdown-menu-right"><li class="active"><a href="#"  >Flat ($)</a></li><li><a href="#" >Percent (%)</a></li></ul></div></div>
+</div>
+</div>
+
+<div class="input-group addon-input">
+    <div class="delete">
+        <button type="button" class="btn btn-link" >
+            <span class="ion-close-round"></span>
+        </button>
+    </div>
+    <input class="input-label form-control " tabindex="1004">
+    <div class="input-group-addon input deleteable">
+        <div input-amount="" is-rate="taxIsRate" currency="invoice.currency" has-selector="true" class="><div class="addon currency-sign">$</div><input class="form-control " type="number" step="any" autocomplete="off" tabindex="1005"change="change()"><div class="addon percent">%</div><div class="addon selector"><button type="button" class="btn dropdown-toggle" aria-haspopup="true" aria-expanded="false"><span class="ion-chevron-down"></span></button></div><ul class="dropdown-menu dropdown-menu-right"><li><a href="#"  >Flat ($)</a></li><li class="active"><a href="#" >Percent (%)</a></li></ul></div></div>
+</div>
+</div>
+
+<div class="input-group addon-input ">
+    <div class="delete">
+        <button type="button" class="btn btn-link" >
+            <span class="ion-close-round"></span>
+        </button>
+    </div>
+    <input class="input-label form-control " tabindex="1006">
+    <div class="input-group-addon input deleteable">
+        <div input-amount="" is-rate="false" currency="invoice.currency" class="><div class="addon currency-sign">$</div><input class="form-control " type="number" step="any" autocomplete="off" tabindex="1007"change="change()"><div class="addon percent">%</div><div class="addon selector"><button type="button" class="btn dropdown-toggle" aria-haspopup="true" aria-expanded="false"><span class="ion-chevron-down"></span></button></div><ul class="dropdown-menu dropdown-menu-right"><li class="active"><a href="#"  >Flat ($)</a></li><li><a href="#" >Percent (%)</a></li></ul></div></div>
+</div>
+</div>
+
+<div class="add-rates">
+    <button type="button" class="btn btn-link btn-sm"  tabindex="1008">
+        <span class="ion-plus-round"></span>
+        Discount
+    </button>
+    <button type="button" class="btn btn-link btn-sm "  tabindex="1009">
+        <span class="ion-plus-round"></span>
+        Tax
+    </button>
+    <button type="button" class="btn btn-link btn-sm"  tabindex="1010">
+        <span class="ion-plus-round"></span>
+        Shipping
+    </button>
+</div>
+
+<div class="input-group addon-input">
+    <input class="input-label form-control " tabindex="1011">
+    <div class="input-group-addon value deleteable"><span class="currency-amount"><span class="currency-symbol">$</span>0<span class="currency-decimal">.</span><span class="currency-fraction">00</span></span></div>
+</div>
+
+<div class="input-group addon-input">
+    <input class="input-label form-control " tabindex="1012">
+    <div class="input-group-addon input deleteable">
+        <div input-amount="" currency="invoice.currency" class="><div class="addon currency-sign">$</div><input class="form-control " type="number" step="any" autocomplete="off" tabindex="1013"change="change()"><div class="addon percent">%</div><div class="addon selector"><button type="button" class="btn dropdown-toggle" aria-haspopup="true" aria-expanded="false"><span class="ion-chevron-down"></span></button></div><ul class="dropdown-menu dropdown-menu-right"><li class="active"><a href="#"  >Flat ($)</a></li><li><a href="#" >Percent (%)</a></li></ul></div></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="footer">
+    <div class="notes-holder">
+        <div class="field">
+            <input class="input-label form-control " tabindex="1014">
+        </div>
+        <div class="value">
+            <div class="expandingText" style="position: relative;"><textarea class="notes form-control  expanding-init" placeholder="Notes - any relevant information not already covered" tabindex="1015" expanding-textarea="" style="position: absolute; height: 100%; resize: none;"></textarea><pre class="textareaClone" style="visibility: hidden; border: 1px solid; white-space: pre-wrap; line-height: 20px; text-decoration: none solid rgb(85, 85, 85); font-size: 14px; font-family: ColfaxWeb, &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; word-break: normal; padding: 8px 12px; margin-bottom: 0px;"><div> </div></pre></div>
+        </div>
+    </div>
+    <div class="terms-holder">
+        <div class="field">
+            <input class="input-label form-control " tabindex="1016">
+        </div>
+        <div class="value">
+            <div class="expandingText" style="position: relative;"><textarea class="terms form-control  expanding-init" placeholder="Terms and conditions - late fees, payment methods, delivery schedule" tabindex="1017" expanding-textarea="" style="position: absolute; height: 100%; resize: none;"></textarea><pre class="textareaClone" style="visibility: hidden; border: 1px solid; white-space: pre-wrap; line-height: 20px; text-decoration: none solid rgb(85, 85, 85); font-size: 14px; font-family: ColfaxWeb, &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; word-break: normal; padding: 8px 12px; margin-bottom: 0px;"><div> </div></pre></div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="invoice_alert_div alert" style="display: none"></div>
+<button type="submit" class="btn submit-btn m-t-15">Submit</button>
+<!--        <h4 class="color-green">NEW INVOICE</h4>-->
+<!--        <div class="row m-t-15">-->
+<!--            <div class="col-md-6 ">-->
+<!--                <label>Name</label>-->
+<!--                <input type="text" class="form-control" placeholder="Name of the invoice" name="name" maxlength="45" required>-->
+<!--            </div>-->
+<!--            <div class="col-md-6 ">-->
+<!--                <label>Label</label>-->
+<!--                <input type="text" class="form-control" placeholder="Label of the invoice (if any)" maxlength="145" name="label">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="row m-t-15">-->
+<!--            <div class="col-md-12">-->
+<!--                <label>Description</label>-->
+<!--                <input type="text" class="form-control" placeholder="Enter Description" name="description" required maxlength="255">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="row m-t-15">-->
+<!--            <div class="col-md-6 ">-->
+<!--                <label>Rate</label>-->
+<!--                <input type="number" step="0.01" min="0.01" max="9999" class="form-control" placeholder="Enter Price" name="rate" required>-->
+<!--            </div>-->
+<!--            <div class="col-md-6 ">-->
+<!--                <label>Unique Code/SKU</label>-->
+<!--                <input type="text" class="form-control" placeholder="Enter Unique Code/SKU"  maxlength="99" name="sku" required>-->
+<!--            </div>-->
+<!--        </div>-->
+</form>
+<hr>
+<table id="invoices-table" class="display:none" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th>Customer Name</th>
+        <th>Due Amount</th>
+        <th>Invoice Number</th>
+        <th>Invoice Date </th>
+        <th>Generated On</th>
+    </tr>
+    </thead>
+</table>
+<div class="no_data_found"></div>
+</div>
+<script type="text/javascript" src="static/javascripts/invoice.js?v=0.0.2"></script>
+<script type="text/javascript" src="static/javascripts/logout.js"></script>

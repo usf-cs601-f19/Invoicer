@@ -1,27 +1,29 @@
-<!doctype html>
-<html lang="">
-<head>
-    <title>Invoicing Solution - Login</title>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
-
-    <script src="assets/js/vendor/jquery.min.js"></script>
-    <script src="assets/js/vendor/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" href="assets/css/main.css">
-
-    <link rel="apple-touch-icon" href="icon.png">
-</head>
-<body>
+<style>
+    html, body {
+        height:100%;
+        width:100%;
+    }
+    body {
+        background-color: white;
+        background-image: url('static/images/auth-background.jpg');
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+        background-position: left top;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+</style>
 <!--[if IE]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
 <![endif]-->
 <div class="container">
     <div class="row">
+        <div style="text-align: center;margin-bottom: 35px;">
+            <h3>Invoicer - Invoicing Solution</h3>
+            <img src="/static/images/icon.png" height="100">
+        </div>
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-login">
                 <div class="panel-heading">
@@ -30,7 +32,7 @@
                             <a href="#" class="active" id="login-form-link">Login</a>
                         </div>
                         <div class="col-xs-6 div-border-left">
-                            <a href="register.html" id="register-form-link">Register</a>
+                            <a href="/register" id="register-form-link">Register</a>
                         </div>
                     </div>
                     <hr>
@@ -64,16 +66,13 @@
     </div>
 </div>
 <script>
-    const api_url = "http://127.0.0.1:3000";
 
     if (typeof(Storage) !== "undefined") {
-        // Code for localStorage/sessionStorage.
-        let key = localStorage.getItem('akrandom');
-        if(key !== null){
-            window.location = "customers.html";
+        if (auth !== null) {
+            window.location = "/customers";
         }
     }
-    else {
+    else{
         $('#login-form').html('<h1 style="margin: 55px;text-align: center">Browser not supported</h1>')
     }
 
@@ -111,16 +110,19 @@
                     $(".login_alert_div").text("Logged in. Redirecting....").show().fadeTo(5000, 500).slideUp(500);
                     let cookieName = "inv_cookie";
                     localStorage.setItem('akrandom',data.data);
-                    window.location = "customers.html";
+                    window.location = "/customers";
                 }
             },
             error: function(jqXHR, textStatus, errorThrown){
                 $(".login_alert_div").empty().hide().addClass('alert-danger').removeClass('alert-success');
-                $(".login_alert_div").text(jqXHR.responseJSON.message).show().fadeTo(3000, 500).slideUp(500);
+                if(jqXHR.hasOwnProperty('responseJSON') && jqXHR.responseJSON.hasOwnProperty('message')){
+                    $(".login_alert_div").text(jqXHR.responseJSON.message).show().fadeTo(3000, 500).slideUp(500);
+                }
+                else {
+                    $(".login_alert_div").text("Error loggin in. Please try after some time !!").show().fadeTo(3000, 500).slideUp(500);
+                }
             }
         });
         return false;
     });
 </script>
-</body>
-</html>
