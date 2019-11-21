@@ -26,15 +26,13 @@ class Invoice {
             assert(req.body.customer_id, "Customer Name is required");
             assert(req.body.inv_date, "Invoice Date is required");
             assert(req.body.due_date, "Due Date is required");
-            assert(req.body.sub_total, "Sub Total is required");
             assert(req.body.total_amt, "Total Amount is required");
             assert(req.body.due_amt, "Due Amount is required");
-            assert(req.body.custom_tax, "Please choose one of Tax options");
             assert(req.body.products, "Please select atleast one product");
 
-            const columnList = ['inv_number', 'customer_id', 'inv_date', 'due_date', 'sub_total', 'total_amt', 'due_amt', 'custom_tax', 'user_id'];
-            const columnValuesList = ['?', '?', '?', '?', '?', '?', '?', '?', '?'];
-            const columnValues = [req.body.inv_number, req.body.customer_id, req.body.inv_date, req.body.due_date, req.body.sub_total, req.body.total_amt, req.body.due_amt, req.body.custom_tax, req.user_id];
+            const columnList = ['inv_number', 'customer_id', 'inv_date', 'due_date', 'total_amt', 'due_amt', 'user_id'];
+            const columnValuesList = ['?', '?', '?', '?', '?', '?', '?'];
+            const columnValues = [req.body.inv_number, req.body.customer_id, req.body.inv_date, req.body.due_date, req.body.total_amt, req.body.due_amt, req.user_id];
 
             if (req.body.hasOwnProperty('state_id')) {
                 columnList.push('state_id');
@@ -207,14 +205,13 @@ class Invoice {
      */
     getInvoice(req, res) {
         try {
-            assert(req.params.id, 'Invoice Id not provided');
+            assert(req.params.invoice_id, 'Invoice Id not provided');
             assert(req.user_id, 'User not logged in');
 
-            connectionPool.query(`SELECT *
-                                  FROM invoicing.invoice
-                                  where id = ?
-                                    and user_id = ?`,
-                [req.params.id, req.user_id], function (error, result, fields) {
+            connectionPool.query(`SELECT inv.*, ip.*, pr.name product_name, cst.name customer_name, cst.email customer_email, cst.company_name customer_company_name, usr.mobile user_mobile,usr.email user_email,usr.name user_name,usr.company_name user_company_name,usr.company_address user_company_address
+                                  FROM invoicing.invoice inv, invoicing.invoice_product ip, invoicing.product pr, invoicing.customer cst, invoicing.user usr
+                                  where inv.id = ip.invoice_id and pr.id = ip.product_id and inv.customer_id = cst.id and usr.id = inv.user_id and  inv.id = ? and inv.user_id = ?;`,
+                [req.params.invoice_id, req.user_id], function (error, result, fields) {
                     if (error) {
                         res.status(500).send({
                             status: "error",
@@ -223,6 +220,7 @@ class Invoice {
                         });
                     } else {
                         if (result.length > 0) {
+                            delete result[0]['user_id'];
                             res.status(200).send({
                                 status: "success",
                                 data: result[0],
@@ -255,7 +253,7 @@ class Invoice {
      * @param res response object
      * @return Returns true if invoice deleted successfully. Returns error in case of error
      */
-    getInvoice(req, res) {
+    deleteInvoice(req, res) {
         try {
             assert(req.params.id, 'Invoice Id not provided');
             assert(req.user_id, 'User not logged in');

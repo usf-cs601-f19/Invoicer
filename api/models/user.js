@@ -30,6 +30,7 @@ class User {
             assert(req.body.confirmPassword, 'Confirm Password is required');
             assert(req.body.companyName, 'Company Name is required');
             assert(req.body.type_id, 'User Type is required');
+            assert(req.body.company_address, 'Company Address is required');
 
             assert.strictEqual(req.body.password, req.body.confirmPassword, "Password and Confirm Password don't match");
 
@@ -39,13 +40,14 @@ class User {
             let companyName = req.body.companyName;
             let company_website = req.body.company_website;
             let type_id = req.body.type_id;
+            let company_address = req.body.company_address;
             let email = req.body.hasOwnProperty('email') ? req.body.email : "";
 
             const hashedPassword = hashSync(password, 10);  // 10 - number of rounds
 
             connectionPool.query(`INSERT IGNORE into invoicing.user(name, mobile, password, company_name, 
-       company_website, email,type_id) VALUES(?,?,?,?,?,?,?)`, [
-                name, mobile, hashedPassword, companyName, company_website, email, type_id], function (error, result, fields) {
+       company_website, email,type_id,company_address) VALUES(?,?,?,?,?,?,?,?)`, [
+                name, mobile, hashedPassword, companyName, company_website, email, type_id,company_address], function (error, result, fields) {
                 if (error) {
                     res.status(500).send({
                         status: "error",
@@ -195,8 +197,6 @@ class User {
     authenticateToken(req, res, next) {
         const token = req.headers['authorization'];
         try {
-            const verified = jwt.verify(token,JWT_SECRET);
-            console.log("verified",verified);
             connectionPool.query(`SELECT id, expiry_time FROM invoicing.user where auth_token = ?;`, token, function(error, result, fields) {
                 if (error) {
                     res.status(500).send({
