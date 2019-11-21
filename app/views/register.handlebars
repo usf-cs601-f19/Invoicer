@@ -19,7 +19,7 @@
         <div class="row">
             <div style="text-align: center;margin-bottom: 35px;">
                 <h3>Invoicer - Invoicing Solution</h3>
-                <img src="/static/images/icon.png" height="100">
+                <img src="/static/images/logo.png" height="100">
             </div>
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-login">
@@ -75,6 +75,11 @@
                                             <option title='multinational_corporation' value='4'>Multinational Corporation</option>
                                         </select>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <input type="text" name="company_address" id="company_address" tabindex="1" class="form-control"
+                                               placeholder="Company Address"></div>
                                     <div class="register_alert_div alert" style="display: none"></div>
                                     <div class="form-group">
                                         <div class="row">
@@ -95,7 +100,7 @@
 <script>
 
     if (typeof(Storage) !== "undefined") {
-        if (key !== null) {
+        if (auth !== null) {
             window.location = "/customers";
         }
     }
@@ -118,6 +123,7 @@
         const confirm_password = $(this).find('input[name="confirm_password"]').val().trim();
         const company_name = $(this).find('input[name="company_name"]').val().trim();
         const company_website = $(this).find('input[name="company_website"]').val().trim();
+        const company_address = $(this).find('input[name="company_address"]').val().trim();
         const company_type = $(this).find('select[name="company_type"]').val();
 
         if(!name.length){
@@ -145,6 +151,11 @@
             $(".register_alert_div").text("Company Name cannot be left blank").show(0).delay(3000).hide(0);
             return false;
         }
+        else if(!company_address.length){
+            $('.register_alert_div').addClass('alert-danger');
+            $(".register_alert_div").text("Company Address cannot be left blank").show(0).delay(3000).hide(0);
+            return false;
+        }
         else if(parseInt(company_type) === 0){
             $('.register_alert_div').addClass('alert-danger');
             $(".register_alert_div").text("Please select a Company Type").show(0).delay(3000).hide(0);
@@ -158,7 +169,7 @@
         }
 
 
-        let detailJSON = {name,mobile,password,confirmPassword:confirm_password,companyName:company_name,type_id:company_type};
+        let detailJSON = {name,mobile,password,confirmPassword:confirm_password,companyName:company_name,type_id:company_type,company_address};
         if(email.length){
             detailJSON = {...detailJSON,email}
         }

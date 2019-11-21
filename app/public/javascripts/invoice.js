@@ -26,7 +26,8 @@ function getInvoices() {
                         inv_date: moment(invoice.inv_date).format("YYYY-MM-DD"),
                         due_date: moment(invoice.due_date).format("YYYY-MM-DD"),
                         created_on: moment(invoice.created_on).format("YYYY-MM-DD hh:mm:ss A"),
-                        action:`<a class="download_pdf_button" href="javascript:void(0)" data-invoice="${encodeURIComponent(JSON.stringify(invoice))}" style=""><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a>`
+                        action:`<a target="_blank" href="/view/${invoice.id}" data-invoice="${encodeURIComponent(JSON.stringify(invoice))}" style="">View</a>`
+                        //<a class="download_pdf_button" target="_blank" href="/download" data-invoice="${encodeURIComponent(JSON.stringify(invoice))}" style=""><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a>`
                     }
                 });
                 $('#invoices-table').dataTable({
@@ -119,12 +120,6 @@ function addProductsToSelect(row_id){
 }
 $(document).ready(function () {
 
-    const specialElementHandlers = {
-        '#editor': function (element, renderer) {
-            return true;
-        }
-    };
-
     $(document).on('submit', '.add-invoice-form', function () {
         const inv_number = $('input[name="inv_number"]').val().trim() ;
         const tax_val = $('input[name="tax_val"]').val().trim() ;
@@ -205,13 +200,13 @@ $(document).ready(function () {
         return false;
     });
 
-    $(document).on("click", ".download_pdf_button", function () {
-        const doc = new jsPDF();
-        let data = $(this).data('invoice');
-        data = JSON.parse(decodeURIComponent(data));
-        console.log("data",data);
-        return false;
-    });
+    // $(document).on("click", ".download_pdf_button", function () {
+    //
+    //     let data = $(this).data('invoice');
+    //     data = JSON.parse(decodeURIComponent(data));
+    //     console.log("data",data);
+    //     return false;
+    // });
 
     $(document).on("click", ".add_new_invoice_product", function () {
         const count = $(".product_parent > div").length + 1;

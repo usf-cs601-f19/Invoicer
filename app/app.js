@@ -17,6 +17,8 @@ const usersRouter = require('./routes/users');
 const productsRouter = require('./routes/product');
 const customerRouter = require('./routes/customer');
 const invoiceRouter = require('./routes/invoice');
+const viewRouter = require('./routes/view');
+const downloadRouter = require('./routes/download');
 
 const app = express();
 
@@ -42,6 +44,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/', usersRouter);
 app.use('/products', productsRouter);
 app.use('/customers', customerRouter);
+app.use('/download', downloadRouter);
 app.use('/invoices', invoiceRouter);
+app.use('/view', viewRouter);
 
 module.exports = app;
