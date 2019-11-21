@@ -119,7 +119,7 @@ thead tr th, table.dataTable.no-footer{
   margin-top: 15px
 }
 
-.add_more_button,.remove_more_button{
+.download_pdf_button,.add_more_button,.remove_more_button{
     border-radius: 4px;
     color: #fff;
     cursor: pointer;
@@ -138,6 +138,9 @@ thead tr th, table.dataTable.no-footer{
 .add_more_button{
     background:#41acea;
 }
+.download_pdf_button{
+    background:#cc3102d6;
+}
 .remove_more_button{
     background: #ae501b;
 }
@@ -155,4 +158,3 @@ thead tr th, table.dataTable.no-footer{
     box-sizing: content-box;
     margin-left: 25px;
 }
-

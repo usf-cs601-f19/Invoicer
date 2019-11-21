@@ -18,21 +18,33 @@ function getInvoices() {
         contentType: 'application/json',
         success: function(data, textStatus, jqXHR){
             if(jqXHR.status === 200){
-                // $('#invoices-table').dataTable({
-                //     data: data.data,
-                //     destroy: true,
-                //     columns: [
-                //         {data: 'customer_name'},
-                //         {data: 'due_amt'},
-                //         {data: 'inv_number'},
-                //         {data: 'inv_date'},
-                //         {data: 'due_date'},
-                //         {data: 'created_on'}
-                //     ],
-                //     responsive: true
-                // });
-                // $('.no_data_found').hide();
-                // $('#invoices-table').show();
+                const invoiceData = data.data.map(invoice =>{
+                    return {
+                        customer_name: invoice.customer_name,
+                        due_amt: `$ ${invoice.due_amt}`,
+                        inv_number: invoice.inv_number,
+                        inv_date: moment(invoice.inv_date).format("YYYY-MM-DD"),
+                        due_date: moment(invoice.due_date).format("YYYY-MM-DD"),
+                        created_on: moment(invoice.created_on).format("YYYY-MM-DD hh:mm:ss A"),
+                        action:`<a class="download_pdf_button" href="javascript:void(0)" data-invoice="${encodeURIComponent(JSON.stringify(invoice))}" style=""><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a>`
+                    }
+                });
+                $('#invoices-table').dataTable({
+                    data: invoiceData,
+                    destroy: true,
+                    columns: [
+                        {data: 'inv_number'},
+                        {data: 'customer_name'},
+                        {data: 'due_amt'},
+                        {data: 'inv_date'},
+                        {data: 'due_date'},
+                        {data: 'created_on'},
+                        {data: 'action'}
+                    ],
+                    responsive: true
+                });
+                $('.no_data_found').hide();
+                $('#invoices-table').show();
             }
             else if(jqXHR.status === 204){
                 $('#invoices-table').hide();
@@ -107,7 +119,14 @@ function addProductsToSelect(row_id){
 }
 $(document).ready(function () {
 
+    const specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
     $(document).on('submit', '.add-invoice-form', function () {
+        const inv_number = $('input[name="inv_number"]').val().trim() ;
         const tax_val = $('input[name="tax_val"]').val().trim() ;
         const discount = $('input[name="discount"]').val().trim() ;
         const shipping_charge = $('input[name="shipping_charge"]').val().trim() ;
@@ -116,27 +135,19 @@ $(document).ready(function () {
         const terms = $('textarea[name="terms"]').val().trim() ;
         const inv_date = $('input[name="inv_date"]').val().trim() ;
         const due_date = $('input[name="due_date"]').val().trim() ;
-        const sub_total = $('input[name="sub_total"]').val().trim() ;
-        const total_amt = $('input[name="total_amt"]').val().trim() ;
-        const due_amt = $('input[name="due_amt"]').val().trim() ;
+        const total_amt = parseFloat($('.total_amt').html().split(" ")[1]);
+        const due_amt = parseFloat($('.balanace').html().split(" ")[1]);
         const customer_id = $('select[name="customer_id"]').val();
 
-        // Radio
-        const custom_tax = $('input[name="custom_tax"]').val().trim() ;
-
         let products = [];
-        $.each($('.products'), function () {
-            products.push({
-                "product_id": $(this).find('input[name="products_desc"]').val(),
-                "quantity": $(this).find('input[name="products_qty"]').val(),
-                "rate": $(this).find('input[name="products_rate"]').val()
-            });
+        products.push({
+            "product_id": $('select[name="product_id"]').val().trim(),
+            "quantity": $('input[name="quantity"]').val().trim(),
+            "rate": $('input[name="rate"]').val().trim()
         });
 
-        let form_data = {inv_number, customer_id, inv_date, due_date, sub_total, total_amt, due_amt, custom_tax,products};
-        if (state_id.length) {
-            form_data = {...form_data,state_id}
-        }
+        let form_data = {inv_number, customer_id, inv_date, due_date, total_amt, due_amt,products};
+
         if (tax_val.length) {
             form_data = {...form_data,tax_val}
         }
@@ -191,6 +202,14 @@ $(document).ready(function () {
                     $(".invoice_alert_div").text("Something didn't work").show(0).delay(3000).hide(0);
             }
         });
+        return false;
+    });
+
+    $(document).on("click", ".download_pdf_button", function () {
+        const doc = new jsPDF();
+        let data = $(this).data('invoice');
+        data = JSON.parse(decodeURIComponent(data));
+        console.log("data",data);
         return false;
     });
 
@@ -267,8 +286,11 @@ $(document).ready(function () {
         total += discounted_price;
         total += (total * tax_val / 100);
         total += shippingVal;
-        const balanace = total - amtPaid;
-
+        let balanace = total - amtPaid;
+        if(discount<0 || taxVal < 0 || discount>100 || taxVal >100) {
+            total = 0;
+            balanace = 0;
+        }
         $('.total_amt').html("$ "+ total.toFixed(2))
         $('.balanace').html("$ "+ balanace.toFixed(2))
     }
