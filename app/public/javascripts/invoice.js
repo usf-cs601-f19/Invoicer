@@ -1,6 +1,13 @@
+var productsArr;
+var discount = 0;
+var quantity = 0;
+var rate = 0;
+var tax_val = 0;
+var shipping_charge = 0;
+var amt_paid = 0;
+
 getInvoices();
 function getInvoices() {
-
     // Store user entered data to local storage
     $.ajax({
         url: `${api_url}/invoice/all`,
@@ -11,21 +18,21 @@ function getInvoices() {
         contentType: 'application/json',
         success: function(data, textStatus, jqXHR){
             if(jqXHR.status === 200){
-                $('#invoices-table').dataTable({
-                    data: data.data,
-                    destroy: true,
-                    columns: [
-                        {data: 'customer_name'},
-                        {data: 'due_amt'},
-                        {data: 'inv_number'},
-                        {data: 'inv_date'},
-                        {data: 'due_date'},
-                        {data: 'created_on'}
-                    ],
-                    responsive: true
-                });
-                $('.no_data_found').hide();
-                $('#invoices-table').show();
+                // $('#invoices-table').dataTable({
+                //     data: data.data,
+                //     destroy: true,
+                //     columns: [
+                //         {data: 'customer_name'},
+                //         {data: 'due_amt'},
+                //         {data: 'inv_number'},
+                //         {data: 'inv_date'},
+                //         {data: 'due_date'},
+                //         {data: 'created_on'}
+                //     ],
+                //     responsive: true
+                // });
+                // $('.no_data_found').hide();
+                // $('#invoices-table').show();
             }
             else if(jqXHR.status === 204){
                 $('#invoices-table').hide();
@@ -36,25 +43,77 @@ function getInvoices() {
             console.log(jqXHR.responseJSON);
             $('#invoices-table').hide();
             $('.no_data_found').html('<h3 class="m-t-15">No Invoice Found</h3>');
+        }
+    });
+    return false;
+}
+(() => {
+    $.ajax({
+        url: `${api_url}/customer/all`,
+        type: 'get',
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", auth);
+        },
+        success: function(data, textStatus, jqXHR){
+            if(jqXHR.status === 200){
+                data.data.forEach(i=>{
+                    $('#customer_id').append(`<option value="${i.customer_id}">${i.name}</option>`);
+                })
+            }
+            else if(jqXHR.status === 204){
+                $('#customer_id').html(`No customer exist. Add new via Customers Tab`);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            console.log(jqXHR.responseJSON.message);
+            $(".login_alert_div").empty().hide().addClass('alert-danger').removeClass('alert-success');
+            $(".login_alert_div").text(jqXHR.responseJSON.message).show().fadeTo(5000, 500).slideUp(500);
+        }
+    });
+    return false;
+})();
+(() => {
+    $.ajax({
+        url: `${api_url}/product/all`,
+        type: 'get',
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", auth);
+        },
+        contentType: 'application/json',
+        success: function(data, textStatus, jqXHR){
+            if(jqXHR.status === 200){
+                productsArr = data.data;
+                addProductsToSelect(1);
+            }
+            else if(jqXHR.status === 204){
+                $('#product').html(`No Product exist. Add new via Customers Tab`);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            console.log(jqXHR.responseJSON);
+            $('#products-table').hide();
+            $('.no_data_found').html('<h3 class="m-t-15">No Product Found</h3>');
             // $(".login_alert_div").empty().hide().addClass('alert-danger').removeClass('alert-success');
             // $(".login_alert_div").text(jqXHR.responseJSON.message).show().fadeTo(5000, 500).slideUp(500);
         }
     });
     return false;
+})();
+
+function addProductsToSelect(row_id){
+    productsArr.forEach(i=>{
+        $('.product.'+row_id).append(`<option value="${i.id}">${i.name}</option>`);
+    })
 }
 $(document).ready(function () {
 
     $(document).on('submit', '.add-invoice-form', function () {
-        const name = $('input[name="name"]').val();
-        const label = $('input[name="label"]').val();
-        const description = $('input[name="description"]').val();
-        const state_id = $('select[name="state_id"]').val();
         const tax_val = $('input[name="tax_val"]').val().trim() ;
         const discount = $('input[name="discount"]').val().trim() ;
         const shipping_charge = $('input[name="shipping_charge"]').val().trim() ;
         const prepaid_amt = $('input[name="prepaid_amt"]').val().trim() ;
-        const notes = $('input[name="notes"]').val().trim() ;
-        const terms = $('input[name="terms"]').val().trim() ;
+        const notes = $('textarea[name="notes"]').val().trim() ;
+        const terms = $('textarea[name="terms"]').val().trim() ;
         const inv_date = $('input[name="inv_date"]').val().trim() ;
         const due_date = $('input[name="due_date"]').val().trim() ;
         const sub_total = $('input[name="sub_total"]').val().trim() ;
@@ -135,6 +194,12 @@ $(document).ready(function () {
         return false;
     });
 
+    $(document).on("click", ".add_new_invoice_product", function () {
+        const count = $(".product_parent > div").length + 1;
+        const html = `<div class="row ${count} m-t-15"> <div class="col-md-6 "> <label>Name</label> <select class="form-control product ${count}" required> <option>Select Product</option> </select> </div><div class="col-md-1 "> <label>Quantity</label> <input type="number" step="1" min="1" max="9999" class="form-control quantity ${count}" placeholder="Qty" name="quantity" required> </div><div class="col-md-2 "> <label>Rate (in $)</label> <input type="number" step="0.01" min="0.01" max="9999" class="form-control rate ${count}" placeholder="Rate" name="rate" required> </div><div class="col-md-2 "> <label>Amount (in $)</label> <div></div></div><div class="col-md-1 remove_product_row" data-rowid="${count}"><i class="fa fa-times" aria-hidden="true" ></i></div></div>`;
+        $(".product_parent").append(html);
+    });
+
     $(document).on('click', ".add_new_invoice", function () {
         $('.add-invoice-form').show();
         $('.remove_new_invoice').show();
@@ -147,4 +212,133 @@ $(document).ready(function () {
         $('.remove_new_invoice').hide();
         $('.add_new_invoice').show();
     })
+
+    $(document).on("keyup", ".quantity,.rate", function (event) {
+        determineRateQty();
+    });
+
+    $(document).on("change", ".quantity,.rate", function (event) {
+        determineRateQty();
+    });
+    $(document).on("keyup", ".discount", function (event) {
+        determineDiscount();
+    });
+    $(document).on("change", ".discount", function (event) {
+        determineDiscount();
+    });
+
+    $(document).on("change", ".tax_val", function (event) {
+        determineTaxVal();
+    });
+
+    $(document).on("keyup", ".tax_val", function (event) {
+        determineTaxVal();
+    });
+    $(document).on("change", ".amt_paid", function (event) {
+        determineAmtPaid();
+    });
+
+    $(document).on("keyup", ".amt_paid", function (event) {
+        determineAmtPaid();
+    });
+    $(document).on("change", ".shipping_charge", function (event) {
+        determineShipping();
+    });
+
+    $(document).on("keyup", ".shipping_charge", function (event) {
+        determineShipping();
+    });
+
+    function calculateBalance() {
+
+        let total = 0;
+        let discounted_price = 0 || discount;
+        let taxVal = tax_val || 0;
+        let shippingVal = shipping_charge || 0;
+        let amtPaid = amt_paid || 0;
+        let amount = 0;
+        const amountDivVal = $('.div-amount').html().trim();
+
+        if(amountDivVal.length){
+            amount = parseFloat(parseFloat(amountDivVal).toFixed(2));
+        }
+        discounted_price = amount - (amount * discounted_price / 100);
+
+        total += discounted_price;
+        total += (total * tax_val / 100);
+        total += shippingVal;
+        const balanace = total - amtPaid;
+
+        $('.total_amt').html("$ "+ total.toFixed(2))
+        $('.balanace').html("$ "+ balanace.toFixed(2))
+    }
+    function determineRateQty(){
+
+        const quantityVal = $('.quantity').val().trim();
+        const rateVal = $('.rate').val().trim();
+        if(!quantityVal.length){
+            quantity = 0;
+        }
+        else{
+            quantity = parseFloat(quantityVal);
+        }
+        if(!rateVal.length){
+            rate = 0;
+        }
+        else{
+            rate = parseFloat(rateVal);
+        }
+        if(quantity && rate){
+            $('.div-amount').html((parseFloat(quantity)*parseFloat(rate)).toFixed(2))
+            calculateBalance();
+        }
+        else {
+            $('.div-amount').html("0.00");
+        }
+        return false;
+    }
+    function determineDiscount(){
+        const discountVal = $('.discount').val().trim();
+        if(!discountVal.length){
+            discount = 0;
+        }
+        else{
+            discount = parseFloat(discountVal);
+        }
+        calculateBalance();
+        return false;
+    }
+    function determineTaxVal(){
+        const taxVal = $('.tax_val').val().trim();
+        if(!taxVal.length){
+            tax_val = 0;
+        }
+        else{
+            tax_val = parseFloat(taxVal);
+        }
+        calculateBalance();
+        return false;
+    }
+    function determineAmtPaid(){
+        const amtPaid = $('.amt_paid').val().trim();
+        if(!amtPaid.length){
+            amt_paid = 0;
+        }
+        else{
+            amt_paid = parseFloat(amtPaid);
+        }
+        calculateBalance();
+        return false;
+    }
+    function determineShipping(){
+        const shippingVal = $('.shipping_charge').val().trim();
+        if(!shippingVal.length){
+            shipping_charge = 0;
+        }
+        else{
+            shipping_charge = parseFloat(shippingVal);
+        }
+        calculateBalance();
+        return false;
+    }
 });
