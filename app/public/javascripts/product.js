@@ -33,8 +33,6 @@ function getProducts() {
             console.log(jqXHR.responseJSON);
             $('#products-table').hide();
             $('.no_data_found').html('<h3 class="m-t-15">No Product Found</h3>');
-            // $(".login_alert_div").empty().hide().addClass('alert-danger').removeClass('alert-success');
-            // $(".login_alert_div").text(jqXHR.responseJSON.message).show().fadeTo(5000, 500).slideUp(500);
         }
     });
     return false;

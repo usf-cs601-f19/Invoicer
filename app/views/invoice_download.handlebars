@@ -77,6 +77,17 @@
             text-align: center;
         }
     }
+
+    @media print {
+        @page {
+            /*margin-top: 0;*/
+            margin-bottom: 10px;
+        }
+        body {
+            padding-top: 0px;
+            padding-bottom: 72px;
+        }
+    }
 </style>
 <div class="invoice-box" id="invoice-box" style="max-width: 800px;margin: auto;padding: 30px;border: 1px solid #eee;font-size: 16px;line-height: 24px;font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;color: #555;">
     <table class="invoice-table" cellpadding="0" cellspacing="0"  style="width: 100%;line-height: inherit;text-align: left;">
@@ -192,6 +203,11 @@
     </table>
 </div>
 <script>
+
+    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    if(isChrome) {
+
+    }
     (() => {
         $.ajax({
             url: `${api_url}/invoice/{{inv_id}}`,
@@ -234,12 +250,11 @@
                         $('.discount').html(data.data.discount);
                     else
                         $('.discount_tr').hide();
-
+                    printDiv('invoice-box');
                 }
                 else if(jqXHR.status === 204){
-
+                    printDiv('invoice-box');
                 }
-
             },
             error: function(jqXHR, textStatus, errorThrown){
                 console.log(jqXHR.responseJSON);
@@ -249,4 +264,12 @@
         });
         return false;
     })();
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        document.body.innerHTML = originalContents;
+        window.print();
+    }
 </script>
