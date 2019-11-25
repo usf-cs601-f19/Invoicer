@@ -32,7 +32,7 @@ A web application for small business owners and freelancers needing a simple and
 
 ## Languages &amp; Tools
 
-Front-end- HTML5, jQuery 3, Bootstrap 3, CSS
+Front-end- ExpressJS / HTML5, jQuery 3, Bootstrap 3, CSS
 
 Backend- NodeJS/ Express
 
@@ -45,8 +45,6 @@ Endpoint Testing – Postman
 **Font Awesome (icon)** - `https://fontawesome.com/v4.7.0/`
 
 **Datatable** - `https://datatables.net/`
-
-**Apache 2** - To run front-end
 
 # Timeline
 
@@ -72,3 +70,5 @@ To run the API, Goto api folder, open terminal and type `npm start`
 
 ###### Security
 > SQL Injection - `SQL queries are escaped`
+> Server Side assert validations
+> JWT verification
