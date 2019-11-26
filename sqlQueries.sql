@@ -13,6 +13,11 @@ CREATE TABLE `user_type` (
 ) ENGINE=InnoDB;
 
 
+INSERT INTO `user_type` (`name`) VALUES ('Freelancer');
+INSERT INTO `user_type` (`name`) VALUES ('Small Business');
+INSERT INTO `user_type` (`name`) VALUES ('Limited Liability Company');
+INSERT INTO `user_type` (`name`) VALUES ('Multinational Corporation');
+
 CREATE TABLE `user` (
                         `id` int(11) NOT NULL AUTO_INCREMENT,
                         `mobile` bigint(20) NOT NULL,
