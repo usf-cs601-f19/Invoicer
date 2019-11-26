@@ -218,7 +218,6 @@
             contentType: 'application/json',
             success: function(data, textStatus, jqXHR){
                 if(jqXHR.status === 200){
-                    console.log("data.data",data.data);
                     $('.order_num').html("Invoice #: "+data.data.inv_number);
                     $('.inv_date').html("Created: "+ moment(data.data.inv_date).format("MMM D, YYYY"));
                     $('.due_date').html("Due: "+ moment(data.data.due_date).format("MMM D, YYYY"));

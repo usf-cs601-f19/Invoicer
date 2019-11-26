@@ -68,12 +68,13 @@ function getInvoices() {
         },
         success: function(data, textStatus, jqXHR){
             if(jqXHR.status === 200){
+                $('#customer_id').append(`<option value="">Select Customer</option>`);
                 data.data.forEach(i=>{
                     $('#customer_id').append(`<option value="${i.customer_id}">${i.name}</option>`);
                 })
             }
             else if(jqXHR.status === 204){
-                $('#customer_id').html(`No customer exist. Add new via Customers Tab`);
+                $('#customer_id').append(`<option value="">No customer exist. Add new customer via Customer Tab above</option>`);
             }
         },
         error: function(jqXHR, textStatus, errorThrown){
@@ -95,10 +96,11 @@ function getInvoices() {
         success: function(data, textStatus, jqXHR){
             if(jqXHR.status === 200){
                 productsArr = data.data;
+                $('#product_id').append(`<option value="">Select Product</option>`);
                 addProductsToSelect(1);
             }
             else if(jqXHR.status === 204){
-                $('#product').html(`No Product exist. Add new via Customers Tab`);
+                $('#product_id').append(`<option value="">No Product exist. Add new customer via Product Tab above</option>`);
             }
         },
         error: function(jqXHR, textStatus, errorThrown){
