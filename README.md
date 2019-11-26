@@ -6,14 +6,17 @@ A web application for small business owners and freelancers needing a simple and
 Create a schema in your MySQL instance called `invoicing`
 Create tables from `sqlQueries.sql` in the same order as provided in file.
 
+#### Setting up Config
 In default.json in config folder in api, change the values of `dbname` to `invoicing` and `host`, `user` and `password` to your corresponding database hostname, usermane and password
 
 In .env in app, replace the values of PORT, API_URL and API_PORT with Server Port, API server hostname, API server port number. 
 `dbname` to `invoicing` and `host`, `user` and `password` to your corresponding database hostname, usermane and password
 
-#### Testing on Dev Environment
 Download and install NodeJS from `https://nodejs.org/en/download/`
+
+#### Testing on Dev Environment
 To start the server, goto api directory in terminal and run `npm install` and `npm run dev`
+
 To start the front-end, goto app directory in terminal and run `npm install` and `npm run dev`
 
 #### Working on Production environment Environment
@@ -24,6 +27,14 @@ To start the server, goto `api` directory in terminal and run `npm install` and 
 
 To start the server, goto `app` directory in terminal and run `npm install` and then
  `forever start --minUptime 1000 --spinSleepTime 1000 app.js`
+
+### Working with Project
+Open your browser and open page `localhost:4000/` (default page)
+If you have changed port number in .env in app, replace 4000 in above URL with your own port
+
+Register a user, if it is your first time working with the web application
+Login with the registered Username (mobile) and Password 
+
 
 ## Core features
 
