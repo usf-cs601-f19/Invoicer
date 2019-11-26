@@ -10,7 +10,7 @@ CREATE TABLE `user_type` (
                              PRIMARY KEY (`id`),
                              UNIQUE KEY `name` (`name`),
                              KEY `ix_user_type_created_on` (`created_on`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE `user` (
@@ -33,7 +33,7 @@ CREATE TABLE `user` (
                         KEY `ix_user_id` (`id`),
                         KEY `fk_type_id_idx` (`type_id`),
                         CONSTRAINT `fk_type_id` FOREIGN KEY (`type_id`) REFERENCES `user_type` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 CREATE TABLE `product` (
                            `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -50,7 +50,7 @@ CREATE TABLE `product` (
                            KEY `idx_sku` (`sku`),
                            KEY `fk_user_id_idx` (`user_id`),
                            CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE `customer` (
@@ -64,17 +64,13 @@ CREATE TABLE `customer` (
                             `company_name` varchar(99) DEFAULT NULL,
                             `type_id` int(11) DEFAULT NULL,
                             `tin_no` varchar(9) NOT NULL,
-                            `state_id` int(11) DEFAULT NULL,
                             PRIMARY KEY (`id`),
                             UNIQUE KEY `uq_email_user_id` (`email`,`user_id`),
                             KEY `fk_user_idx` (`user_id`),
                             KEY `fk_type_idx` (`type_id`),
-                            KEY `fk_state_idx` (`state_id`),
-                            CONSTRAINT `fk_state` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
                             CONSTRAINT `fk_type` FOREIGN KEY (`type_id`) REFERENCES `user_type` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
                             CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE=InnoDB;
 
 CREATE TABLE `invoice` (
                            `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -99,7 +95,7 @@ CREATE TABLE `invoice` (
                            KEY `fk_usr_idx` (`user_id`),
                            CONSTRAINT `fk_customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
                            CONSTRAINT `fk_usr` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE `invoice_product` (
@@ -114,4 +110,4 @@ CREATE TABLE `invoice_product` (
                                    KEY `fk_invoice_id_idx` (`invoice_id`),
                                    CONSTRAINT `fk_invoice_id` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
                                    CONSTRAINT `fk_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
