@@ -1,5 +1,7 @@
 CREATE schema `invoicing`;
 
+USE invoicing;
+
 CREATE TABLE `user_type` (
                              `id` int(11) NOT NULL AUTO_INCREMENT,
                              `created_on` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
