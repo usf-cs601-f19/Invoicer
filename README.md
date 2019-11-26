@@ -4,8 +4,12 @@ A web application for small business owners and freelancers needing a simple and
 
 ## Starting the project
 Create a schema in your MySQL instance called `invoicing`
-
 Create tables from `sqlQueries.sql` in the same order as provided in file.
+
+In default.json in config folder in api, change the values of `dbname` to `invoicing` and `host`, `user` and `password` to your corresponding database hostname, usermane and password
+
+In .env in app, replace the values of PORT, API_URL and API_PORT with Server Port, API server hostname, API server port number. 
+`dbname` to `invoicing` and `host`, `user` and `password` to your corresponding database hostname, usermane and password
 
 #### Testing on Dev Environment
 Download and install NodeJS from `https://nodejs.org/en/download/`
