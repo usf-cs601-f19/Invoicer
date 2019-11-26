@@ -1,6 +1,25 @@
-## **Invoicing Solution:**
+## **Invoicer -Invoicing Solution:**
 
 A web application for small business owners and freelancers needing a simple and professional invoicing solution.
+
+## Starting the project
+Create a schema in your MySQL instance called `invoicing`
+
+Create tables from `sqlQueries.sql` in the same order as provided in file.
+
+#### Testing on Dev Environment
+Download and install NodeJS from `https://nodejs.org/en/download/`
+To start the server, goto api directory in terminal and run `npm install` and `npm run dev`
+To start the front-end, goto app directory in terminal and run `npm install` and `npm run dev`
+
+#### Working on Production environment Environment
+Install `forever` CLI tool for ensuring that servers are always running and create logs by running `npm install -g forever`
+
+To start the server, goto `api` directory in terminal and run `npm install` and then
+ `forever start --minUptime 1000 --spinSleepTime 1000 app.js`
+
+To start the server, goto `app` directory in terminal and run `npm install` and then
+ `forever start --minUptime 1000 --spinSleepTime 1000 app.js`
 
 ## Core features
 
@@ -14,7 +33,7 @@ A web application for small business owners and freelancers needing a simple and
 
 ## Optional Features
 
-- Server-side validations for required body parameters sent in the request to the server
+- Server-side validations for required body parameters sent in the request to the server (done)
 - Bar-code generation for each invoice to easily access the invoices data later on
 - Sending invoice to the customer email via button click on the web site (Gmail API will be used)
 
@@ -32,7 +51,7 @@ A web application for small business owners and freelancers needing a simple and
 
 ## Languages &amp; Tools
 
-Front-end- HTML5, jQuery 3, Bootstrap 3, CSS
+Front-end- ExpressJS / HTML5, jQuery 3, Bootstrap 3, CSS
 
 Backend- NodeJS/ Express
 
@@ -45,8 +64,6 @@ Endpoint Testing – Postman
 **Font Awesome (icon)** - `https://fontawesome.com/v4.7.0/`
 
 **Datatable** - `https://datatables.net/`
-
-**Apache 2** - To run front-end
 
 # Timeline
 
@@ -72,3 +89,5 @@ To run the API, Goto api folder, open terminal and type `npm start`
 
 ###### Security
 > SQL Injection - `SQL queries are escaped`
+> Server Side assert validations
+> JWT verification
